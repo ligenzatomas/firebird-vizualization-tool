@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Template JNLP File for TinyUML Application on Sourceforge.net -->
+<jnlp spec="6.0+" codebase="http://tinyuml.sourceforge.net/webstart" href="tinyuml-sourceforge.jnlp">
+  <information>
+    <title>TinyUML Webstart Application</title>
+    <vendor>TinyUML.org</vendor>
+    <homepage href="http://tinyuml.org"/>
+    <description>TinyUML Webstart demonstration</description>
+    <offline-allowed/> 
+    -->
+  </information>
+  <security>
+      <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.6+" java-vm-args="-esa -Xnoclassgc"/>
+    <jar href="tinyuml.jar"/>
+    <jar href="lib/batik-awt-util-1.6.jar"/>
+    <jar href="lib/batik-svggen-1.6.jar"/>
+    <jar href="lib/batik-util-1.6.jar"/>
+  </resources>
+  <application-desc main-class="org.tinyuml.Main"/>
+</jnlp>
+

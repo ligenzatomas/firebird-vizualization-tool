@@ -1,0 +1,34 @@
+body {
+  font-family: verdana, sans-serif;
+  font-size: 10pt;
+}
+
+table.std {
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  border-spacing: 0px;
+  width: 100%;
+}
+
+tr.std {
+  background-color: #ddeeff;
+}
+
+th.std {
+  border-right-color: black;
+  border-right-width: 1px;
+  border-right-style: solid;
+}
+
+td.std {
+  border-right-color: black;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-top-color: black;
+  border-top-width: 1px;
+  border-top-style: solid;
+  padding-top: 2px;
+  padding-bottom: 3px;
+  padding-left: 3px;
+}

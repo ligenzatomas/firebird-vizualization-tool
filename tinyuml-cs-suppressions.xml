@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : tinyuml-cs-suppresions.xml.xml
+    Created on : March 17, 2007, 10:21 PM
+    Author     : Wei-ju Wu
+    Description: Suppression definitions for Checkstyle
+-->
+<!DOCTYPE suppressions PUBLIC
+          '-//Puppy Crawl//DTD Suppressions 1.0//EN'
+          'http://www.puppycrawl.com/dtds/suppressions_1_0.dtd'>
+<suppressions>
+    <suppress checks="LineLength"
+              files="Edit.*Dialog.java" />
+    <suppress checks="JavadocMethod"
+              files="Edit.*Dialog.java" />
+    <suppress checks="MethodLength"
+              files="Edit.*Dialog.java" />
+    <suppress checks="NoWhitespaceAfter"
+              files="Edit.*Dialog.java" />
+</suppressions>

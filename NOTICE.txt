@@ -1,0 +1,5 @@
+This product includes software developed by
+The Apache Software Foundation (http://www.apache.org), namely Batik 1.6,
+for SVG graphics export.
+This product includes icons from the Office Look & Feels project by Robert Futrell
+
