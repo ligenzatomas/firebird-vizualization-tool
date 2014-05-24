@@ -1,7 +1,23 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.umldraw.eer;
 
 import java.awt.geom.Dimension2D;
@@ -12,28 +28,26 @@ import org.tinyuml.draw.DrawingContext;
 import org.tinyuml.draw.Label;
 import org.tinyuml.draw.LabelSource;
 import org.tinyuml.draw.SimpleLabel;
-import org.tinyuml.model.ElementNameChangeListener;
 import org.tinyuml.model.RelationEndType;
 import org.tinyuml.model.RelationType;
 import org.tinyuml.model.UmlModelElement;
 import org.tinyuml.model.UmlModelElementListener;
 import org.tinyuml.model.UmlProcedure;
-import org.tinyuml.model.UmlView;
 import org.tinyuml.umldraw.shared.UmlNode;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class ProcedureElement extends AbstractCompositeNode implements 
 	LabelSource, UmlNode, UmlModelElementListener {
+	
+	private static final long serialVersionUID = -7343723604651055057L;
 	
 	private UmlProcedure procedureData;
 	private Label mainLabel;
 	
 	private Compartment mainCompartment;
-	
-	private ElementNameChangeListener nameChangeListener;
 
 	private static ProcedureElement prototype;
 	
@@ -82,11 +96,6 @@ public class ProcedureElement extends AbstractCompositeNode implements
 		return cloned;
 	}
 	
-	public void addNameChangeListener(ElementNameChangeListener nameChangeListener) {
-		
-		this.nameChangeListener = nameChangeListener;
-	}
-	
 	/**
 	* Returns the main label for testing purposes.
 	* @return the main label
@@ -117,12 +126,15 @@ public class ProcedureElement extends AbstractCompositeNode implements
 	}
 	
 	public UmlModelElement getModelElement() { return procedureData; }
-
-	public String getLabelText() { return getModelElement().getName(); }
+	
+	public String getLabelText() { 
+		
+		return ((UmlProcedure) getModelElement()).getProcedureModel().getName(); 
+	}
 
 	public void setLabelText(String aText) { 
 		
-		getModelElement().setName(aText);
+		((UmlProcedure) getModelElement()).getProcedureModel().setName(aText);
 	}
 
 	public void draw(DrawingContext drawingContext) {

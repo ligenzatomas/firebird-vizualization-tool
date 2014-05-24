@@ -21,6 +21,7 @@ package org.tinyuml.ui;
 
 import java.awt.Component;
 import javax.swing.JTabbedPane;
+import org.tinyuml.model.DatabaseModel;
 import org.tinyuml.model.NameChangeListener;
 import org.tinyuml.model.NamedElement;
 import org.tinyuml.model.UmlModel;
@@ -73,14 +74,21 @@ public class EditorFactory {
 	 * @param umlModel the UmlModel the diagram belongs to
 	 * @return the editor panel
 	 */
-	public EditorPanel openNewEEREditor(UmlModel umlModel) {
-		GeneralDiagram diagram = new EERDiagram(umlModel);
+	public EditorPanel openNewEEREditor(UmlModel umlModel, DatabaseModel databaseModel) {
+		GeneralDiagram diagram = new EERDiagram(umlModel, databaseModel);
 		diagram.setLabelText(ApplicationResources.getInstance().getString(
 			"stdcaption.eerdiagram") + " " + (eerCounter++));
 		umlModel.addDiagram(diagram);
 		return createEditorPanel(new EERDiagramEditor(
 			shell.getShellComponent(), diagram),
 			new EEREditorToolbarManager());
+	}
+	
+	public EditorPanel openEEREditor(GeneralDiagram diagram) {
+		
+		return createEditorPanel(
+			new EERDiagramEditor(shell.getShellComponent(), diagram)
+			, new EEREditorToolbarManager());
 	}
 
   /**

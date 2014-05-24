@@ -31,8 +31,9 @@ import java.util.regex.Pattern;
  * @version 1.0
  */
 public final class Multiplicity implements Serializable {
+	
+	private static final long serialVersionUID = -1899131751650476528L;
 
-  private static final long serialVersionUID = -8450628964473567522L;
   private int lowerBound = 1, upperBound = 1;
   private boolean noUpperLimit = false;
 
@@ -40,7 +41,7 @@ public final class Multiplicity implements Serializable {
   public static final Multiplicity ZERO_TO_ONE =
     Multiplicity.getBoundedInstance(0, 1);
   public static final Multiplicity ONE = new Multiplicity();
-  public static final Multiplicity N = Multiplicity.getUnboundedInstance(0);
+  public static final Multiplicity ZERO_TO_N = Multiplicity.getUnboundedInstance(0);
   public static final Multiplicity ONE_TO_N =
     Multiplicity.getUnboundedInstance(1);
 
@@ -88,7 +89,7 @@ public final class Multiplicity implements Serializable {
     throws ParseException {
     Pattern pattern = Pattern.compile("1|\\*|\\d+\\.\\.(\\d+|\\*)");
     if ("1".equals(str)) return Multiplicity.ONE;
-    if ("*".equals(str)) return Multiplicity.N;
+    if ("*".equals(str)) return Multiplicity.ZERO_TO_N;
     if (pattern.matcher(str).matches()) {
       String[] comps = str.split("\\.\\.");
       int comp1 = Integer.valueOf(comps[0]);

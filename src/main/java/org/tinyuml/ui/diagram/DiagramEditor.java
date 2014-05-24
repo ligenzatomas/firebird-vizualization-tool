@@ -71,6 +71,8 @@ import org.tinyuml.util.MethodCall;
 public abstract class DiagramEditor extends JComponent
 implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 AppCommandListener {
+	
+	private static final long serialVersionUID = -2737685353584361492L;
 
   private static Map<String, MethodCall> selectorMap =
     new HashMap<String, MethodCall>();
@@ -157,6 +159,11 @@ AppCommandListener {
   private void readObject(ObjectInputStream stream)
     throws IOException, ClassNotFoundException {
     initEditorMembers();
+  }
+  
+  public Component getMainWindow() {
+	  
+	  return mainWindow;
   }
 
   /**
@@ -408,6 +415,11 @@ AppCommandListener {
    */
   public void setCreationMode(ElementType elementType) {
     editorMode = createCreationHandler(elementType);
+  }
+  
+  public Node createElement(ElementType elementType) {
+	  
+	 return createCreationHandler(elementType).createElement();
   }
 
   /**

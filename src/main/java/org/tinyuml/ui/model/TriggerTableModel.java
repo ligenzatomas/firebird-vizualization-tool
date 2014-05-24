@@ -1,31 +1,54 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui.model;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import org.tinyuml.model.UmlTableTrigger;
+import org.firebirdvisualizationtool.database.firebird.TriggerFiringTime;
+import org.tinyuml.model.Trigger;
+import org.tinyuml.util.ApplicationResources;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class TriggerTableModel extends AbstractTableModel {
 	
-	private String[] columnNames = {"Název", "Spuštění", "Aktivní"};
+	private static final long serialVersionUID = -5819010517246870700L;
 	
-	private List<UmlTableTrigger> entries = new LinkedList<UmlTableTrigger>();
+	private final String[] columnNames = {
+		ApplicationResources.getInstance().getString("database.model.trigger.name")
+		, ApplicationResources.getInstance().getString("database.model.trigger.start")
+		, ApplicationResources.getInstance().getString("database.model.trigger.active")};
 	
+	private final List<Trigger> entries = new LinkedList<Trigger>();
+	
+	@Override
 	public String getColumnName(int index) {
 		
 		return columnNames[index];
 	}
 	
-	public void addEntry(UmlTableTrigger col) {
+	public void addEntry(Trigger col) {
 		
 		int size = entries.size();
 		
@@ -33,16 +56,16 @@ public class TriggerTableModel extends AbstractTableModel {
 		fireTableRowsInserted(size, size);
 	}
 	
-	public UmlTableTrigger getEntry(int index) {
+	public Trigger getEntry(int index) {
 		
 		if(index < 0 || index >= getRowCount())
-			throw new ArrayIndexOutOfBoundsException("Špatně zadán index pole (" + index + ").");
+			throw new ArrayIndexOutOfBoundsException(ApplicationResources.getInstance().getString("error.bad.index.message"));
 		else
 			return entries.get(index);
 			
 	}
 	
-	public List<UmlTableTrigger> getEntries() {
+	public List<Trigger> getEntries() {
 		
 		return entries;
 	}
@@ -51,8 +74,8 @@ public class TriggerTableModel extends AbstractTableModel {
 		
 		if(index < getRowCount()) {
 			
-			UmlTableTrigger entryDown = entries.remove(index);
-			UmlTableTrigger entryUp = entries.remove(index - 1);
+			Trigger entryDown = entries.remove(index);
+			Trigger entryUp = entries.remove(index - 1);
 
 			entries.add(index - 1, entryDown);
 			entries.add(index, entryUp);
@@ -65,7 +88,7 @@ public class TriggerTableModel extends AbstractTableModel {
 		
 		if(index < (getRowCount() - 1)) {
 		
-			UmlTableTrigger entryDown = entries.remove(index);
+			Trigger entryDown = entries.remove(index);
 			entries.add(index + 1, entryDown);
 
 			fireTableDataChanged();
@@ -132,7 +155,7 @@ public class TriggerTableModel extends AbstractTableModel {
 			break;
 			
 			case 1:
-				entries.get(rowIndex).setFiringTime((UmlTableTrigger.firing) value);
+				entries.get(rowIndex).setFiringTime((TriggerFiringTime) value);
 			break;
 				
 			case 2:

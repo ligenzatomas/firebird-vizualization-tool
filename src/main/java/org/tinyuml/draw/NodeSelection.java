@@ -24,6 +24,7 @@ import java.awt.Cursor;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,8 +37,10 @@ import org.tinyuml.util.Command;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class NodeSelection implements Selection, NodeChangeListener {
+public class NodeSelection implements Selection, NodeChangeListener, Serializable {
 
+	private static final long serialVersionUID = -2300330741760889331L;
+	
   private static final Color ACCEPT_COLOR = new Color(0, 220, 50);
   private static final int HANDLE_SIZE = 5;
   private static final int HANDLE_NW = 0;

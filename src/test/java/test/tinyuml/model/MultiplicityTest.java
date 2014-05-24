@@ -40,8 +40,8 @@ public class MultiplicityTest extends TestCase {
     assertEquals(1, Multiplicity.getDefaultInstance().getUpperBound());
     assertEquals(1, Multiplicity.ONE.getLowerBound());
     assertEquals(1, Multiplicity.ONE.getUpperBound());
-    assertEquals(0, Multiplicity.N.getLowerBound());
-    assertTrue(Multiplicity.N.noUpperLimit());
+    assertEquals(0, Multiplicity.ZERO_TO_N.getLowerBound());
+    assertTrue(Multiplicity.ZERO_TO_N.noUpperLimit());
     assertEquals(1, Multiplicity.ONE_TO_N.getLowerBound());
     assertTrue(Multiplicity.ONE_TO_N.noUpperLimit());
     assertEquals(0, Multiplicity.ZERO_TO_ONE.getLowerBound());
@@ -138,8 +138,8 @@ public class MultiplicityTest extends TestCase {
     assertEquals(Multiplicity.ZERO_TO_ONE,
       Multiplicity.getInstanceFromString("0..1"));
     assertEquals(Multiplicity.ONE, Multiplicity.getInstanceFromString("1..1"));
-    assertEquals(Multiplicity.N, Multiplicity.getInstanceFromString("*"));
-    assertEquals(Multiplicity.N, Multiplicity.getInstanceFromString("0..*"));
+    assertEquals(Multiplicity.ZERO_TO_N, Multiplicity.getInstanceFromString("*"));
+    assertEquals(Multiplicity.ZERO_TO_N, Multiplicity.getInstanceFromString("0..*"));
     assertEquals(Multiplicity.ONE_TO_N,
       Multiplicity.getInstanceFromString("1..*"));
     assertEquals(multiplicity.getBoundedInstance(3, 5),

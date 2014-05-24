@@ -29,14 +29,15 @@ import org.tinyuml.model.Relation.ReadingDirection;
  */
 public class UmlRelation extends AbstractUmlModelElement
 implements Relation {
-
-  private static final long serialVersionUID = 6222870683430074995L;
+	
+	private static final long serialVersionUID = 216351302517949916L;
   private UmlModelElement element1, element2;
   private boolean navigableToElement1, navigableToElement2;
   private boolean canSetElement1Navigability, canSetElement2Navigability;
   private Multiplicity element1Multiplicity = Multiplicity.getDefaultInstance();
   private Multiplicity element2Multiplicity = Multiplicity.getDefaultInstance();
   private ReadingDirection readingDirection = ReadingDirection.UNDEFINED;
+  private ForeignKey foreignKey;
 
   /**
    * {@inheritDoc}
@@ -69,6 +70,14 @@ implements Relation {
    * {@inheritDoc}
    */
   public void setElement2(UmlModelElement element) { element2 = element; }
+  
+	public ForeignKey getForeignKey() {
+		return foreignKey;
+	}
+
+	public void setForeignKey(ForeignKey foreignKey) {
+		this.foreignKey = foreignKey;
+	}
 
   // ************************************************************************
   // ******** Navigability
@@ -167,4 +176,188 @@ implements Relation {
     }
     return "";
   }
+
+	@Override
+	public boolean isElement1Mandatory() {
+		
+		if(getElement1Multiplicity().equals(Multiplicity.ONE)
+			|| getElement1Multiplicity().equals(Multiplicity.ONE_TO_N))
+			
+			return true;
+		
+		return false;
+	}
+
+	@Override
+	public void setElement1Mandatory() {
+		
+		if(getElement1Multiplicity().equals(Multiplicity.ZERO_TO_N))
+			setElement1Multiplicity(Multiplicity.ONE_TO_N);
+		else if(getElement1Multiplicity().equals(Multiplicity.ZERO_TO_ONE))
+			setElement1Multiplicity(Multiplicity.ONE);
+	}
+	
+	@Override
+	public void setElement1NonMandatory() {
+		
+		if(getElement1Multiplicity().equals(Multiplicity.ONE_TO_N))
+			setElement1Multiplicity(Multiplicity.ZERO_TO_N);
+		else if(getElement1Multiplicity().equals(Multiplicity.ONE))
+			setElement1Multiplicity(Multiplicity.ZERO_TO_ONE);
+	}
+
+	@Override
+	public boolean isElement2Mandatory() {
+		
+		if(getElement2Multiplicity().equals(Multiplicity.ONE)
+			|| getElement2Multiplicity().equals(Multiplicity.ONE_TO_N))
+			
+			return true;
+		
+		return false;
+	}
+
+	@Override
+	public void setElement2Mandatory() {
+		
+		if(getElement2Multiplicity().equals(Multiplicity.ZERO_TO_N))
+			setElement2Multiplicity(Multiplicity.ONE_TO_N);
+		else if(getElement2Multiplicity().equals(Multiplicity.ZERO_TO_ONE))
+			setElement2Multiplicity(Multiplicity.ONE);
+	}
+	
+	@Override
+	public void setElement2NonMandatory() {
+		
+		if(getElement2Multiplicity().equals(Multiplicity.ONE_TO_N))
+			setElement2Multiplicity(Multiplicity.ZERO_TO_N);
+		else if(getElement2Multiplicity().equals(Multiplicity.ONE))
+			setElement2Multiplicity(Multiplicity.ZERO_TO_ONE);
+	}
+
+	@Override
+	public boolean isOneOnOne() {
+		
+		if((getElement1Multiplicity().equals(Multiplicity.ONE)
+				|| getElement1Multiplicity().equals(Multiplicity.ZERO_TO_ONE)
+			&& (getElement2Multiplicity().equals(Multiplicity.ONE)
+				|| getElement2Multiplicity().equals(Multiplicity.ZERO_TO_ONE))))
+			
+			return true;
+		
+		return false;
+	}
+
+	@Override
+	public void setOneOnOne() {
+		
+		if(getElement1Multiplicity().equals(Multiplicity.ZERO_TO_N))
+			setElement1Multiplicity(Multiplicity.ZERO_TO_ONE);
+		else if(getElement1Multiplicity().equals(Multiplicity.ONE_TO_N))
+			setElement1Multiplicity(Multiplicity.ONE);
+		
+		if(getElement2Multiplicity().equals(Multiplicity.ZERO_TO_N))
+			setElement2Multiplicity(Multiplicity.ZERO_TO_ONE);
+		else if(getElement2Multiplicity().equals(Multiplicity.ONE_TO_N))
+			setElement2Multiplicity(Multiplicity.ONE);
+	}
+
+	@Override
+	public boolean isOneOnMany() {
+		
+		// only one on many, not many on one
+		if(((getElement1Multiplicity().equals(Multiplicity.ONE)
+					|| getElement1Multiplicity().equals(Multiplicity.ZERO_TO_ONE))
+				&& (getElement2Multiplicity().equals(Multiplicity.ZERO_TO_N)
+					|| getElement2Multiplicity().equals(Multiplicity.ONE_TO_N)))
+			/*|| ((getElement1Multiplicity().equals(Multiplicity.ZERO_TO_N)
+					|| getElement1Multiplicity().equals(Multiplicity.ONE_TO_N))
+				&& (getElement2Multiplicity().equals(Multiplicity.ONE)
+					|| getElement2Multiplicity().equals(Multiplicity.ZERO_TO_ONE)))*/)
+
+			return true;
+		
+		return false;
+	}
+
+	@Override
+	public void setOneOnMany() {
+		
+		if(getElement1Multiplicity().equals(Multiplicity.ZERO_TO_ONE))
+			setElement1Multiplicity(Multiplicity.ZERO_TO_N);
+		else if(getElement1Multiplicity().equals(Multiplicity.ONE))
+			setElement1Multiplicity(Multiplicity.ONE_TO_N);
+	}
+
+	@Override
+	public boolean isIdentifying() {
+		
+		UmlModelElement modelElement1 = getElement1();
+		
+		if(modelElement1 instanceof UmlTable
+			&& foreignKey != null) {
+			
+			UmlTable umlTable1 = (UmlTable) modelElement1;
+			
+			Index primaryKey = umlTable1.getPrimaryKey();
+			
+			if(primaryKey != null) {
+				
+				for(ForeignKeyCol fkCol : foreignKey.getKeyCols()) {
+					if(!primaryKey.isColByName(fkCol.getName())
+						|| (primaryKey.isColByName(fkCol.getName())
+							&& !primaryKey.getColByName(fkCol.getName()).getChecked()))
+						return false;
+				}
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	@Override
+	public void setIdentifying() {
+		
+		UmlModelElement modelElement1 = getElement1();
+		
+		if(modelElement1 instanceof UmlTable
+			&& foreignKey != null) {
+			
+			UmlTable umlTable1 = (UmlTable) modelElement1;
+			
+			Index primaryKey = umlTable1.getPrimaryKey();
+			
+			for(ForeignKeyCol fkCol : foreignKey.getKeyCols()) {
+				
+				if(primaryKey.isColByName(fkCol.getName())) {
+					
+					primaryKey.getColByName(fkCol.getName()).setChecked(true);
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void setNonIdentifying() {
+		
+		UmlModelElement modelElement1 = getElement1();
+		
+		if(modelElement1 instanceof UmlTable
+			&& foreignKey != null) {
+			
+			UmlTable umlTable1 = (UmlTable) modelElement1;
+			
+			Index primaryKey = umlTable1.getPrimaryKey();
+			
+			for(ForeignKeyCol fkCol : foreignKey.getKeyCols()) {
+				
+				if(primaryKey.isColByName(fkCol.getName())) {
+					
+					primaryKey.getColByName(fkCol.getName()).setChecked(false);
+				}
+			}
+		}
+	}
 }

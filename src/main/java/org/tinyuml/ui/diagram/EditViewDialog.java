@@ -1,17 +1,35 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui.diagram;
 
 import java.awt.Dialog;
+import javax.swing.text.PlainDocument;
 import org.tinyuml.model.UmlView;
 import org.tinyuml.umldraw.eer.ViewElement;
 import org.tinyuml.util.ApplicationResources;
+import org.tinyuml.util.DocumentFilterFactory;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class EditViewDialog extends javax.swing.JDialog {
 
@@ -39,6 +57,9 @@ public class EditViewDialog extends javax.swing.JDialog {
 		
 		viewName.setText(umlView.getName());
 		sourceView.setText(umlView.getSource());
+		
+		((PlainDocument) viewName.getDocument()).setDocumentFilter(
+			DocumentFilterFactory.buildFilter(DocumentFilterFactory.DocumentFilterType.DATABASE_COLUMN_NAME_LENGTH, false));
 	}
 	
 	public String getName() {
@@ -78,7 +99,7 @@ public class EditViewDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Název");
+        jLabel1.setText(ApplicationResources.getInstance().getString("database.model.name"));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -129,7 +150,7 @@ public class EditViewDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Pohled", jPanel1);
+        jTabbedPane1.addTab(ApplicationResources.getInstance().getString("database.view"), jPanel1);
 
         cancelButtonView.setText(ApplicationResources.getInstance().getString("stdcaption.cancel"));
         cancelButtonView.addActionListener(new java.awt.event.ActionListener() {

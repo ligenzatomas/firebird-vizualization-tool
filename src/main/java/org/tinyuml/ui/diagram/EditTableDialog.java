@@ -1,17 +1,32 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui.diagram;
 
-import org.tinyuml.umldraw.eer.TableElement;
-import org.tinyuml.util.ApplicationResources;
 import java.awt.Dialog;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.DefaultCellEditor;
@@ -27,101 +42,122 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes;
-import org.tinyuml.model.Domain;
+import javax.swing.text.PlainDocument;
+import org.firebirdvisualizationtool.database.firebird.DataType;
+import org.firebirdvisualizationtool.database.firebird.ForeignKeyActions;
+import org.firebirdvisualizationtool.database.firebird.IndexOrders;
+import org.firebirdvisualizationtool.database.firebird.IndexTypes;
+import org.firebirdvisualizationtool.database.firebird.TriggerFiringTime;
+import org.tinyuml.model.Column;
+import org.tinyuml.model.DatabaseModel;
+import org.tinyuml.model.ForeignKey;
+import org.tinyuml.model.ForeignKeyCol;
+import org.tinyuml.model.Index;
+import org.tinyuml.model.IndexColumn;
+import org.tinyuml.model.Table;
+import org.tinyuml.model.Trigger;
 import org.tinyuml.model.UmlTable;
-import org.tinyuml.model.UmlTableCol;
-import org.tinyuml.model.UmlTableForeignKey;
-import org.tinyuml.model.UmlTableIndex;
-import org.tinyuml.model.UmlTableTrigger;
+import org.tinyuml.ui.EditColDialog;
 import org.tinyuml.ui.model.ColTableModel;
-import org.tinyuml.ui.model.ForeignKeyCol;
 import org.tinyuml.ui.model.ForeignKeyColsTableModel;
 import org.tinyuml.ui.model.ForeignKeyTableModel;
-import org.tinyuml.ui.model.IndexCol;
 import org.tinyuml.ui.model.IndexColsTableModel;
 import org.tinyuml.ui.model.IndexTableModel;
 import org.tinyuml.ui.model.TriggerTableModel;
-import org.tinyuml.umldraw.eer.TablesContainer;
+import org.tinyuml.umldraw.eer.TableElement;
+import org.tinyuml.util.ApplicationResources;
+import org.tinyuml.util.DocumentFilterFactory;
 import org.tinyuml.util.TableAdjuster;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class EditTableDialog extends javax.swing.JDialog {
 	
-	private TableElement objTableElement;
+	private final TableElement objTableElement;
 	
-	private TablesContainer tables;
+	private final DatabaseModel databaseModel;
+	private Table tableModel;
 	
-	private ColTableModel objColTableModel				= new ColTableModel();
+	private final ColTableModel objColTableModel;
 	
-	private IndexTableModel objIndexTableModel			= new IndexTableModel();
-	private IndexColsTableModel objIndexColsTableModel	= new IndexColsTableModel();
+	private final IndexTableModel objIndexTableModel			= new IndexTableModel();
+	private final IndexColsTableModel objIndexColsTableModel	= new IndexColsTableModel();
 	
-	private ForeignKeyTableModel objForeignKeyTableModel= new ForeignKeyTableModel();
-	private ForeignKeyColsTableModel objForeignKeyColsTableModel = new ForeignKeyColsTableModel();
-	private ForeignKeyColsTableModel objForeignKeyReferenceColsTableModel = new ForeignKeyColsTableModel();
+	private final ForeignKeyTableModel objForeignKeyTableModel	= new ForeignKeyTableModel();
+	private final ForeignKeyColsTableModel objForeignKeyColsTableModel = new ForeignKeyColsTableModel();
+	private final ForeignKeyColsTableModel objForeignKeyReferenceColsTableModel = new ForeignKeyColsTableModel();
 	
-	private TriggerTableModel objTriggerTableModel		= new TriggerTableModel();
+	private final TriggerTableModel objTriggerTableModel		= new TriggerTableModel();
 	
-	private TableAdjuster adjuster = new TableAdjuster();
+	private final TableAdjuster adjuster						= new TableAdjuster();
 	
 	private boolean isOk;
 	
-	private int lastModelIndexSelect = -1;
-	private int lastModelForeignKeySelect = -1;
-	private int lastModelTriggerSelect = -1;
+	private int lastModelIndexSelect					= -1;
+	private int lastModelForeignKeySelect				= -1;
+	private int lastModelTriggerSelect					= -1;
 	
-	private boolean indexColsLoading = false;
+	private boolean indexColsLoading					= false;
 	
-	private boolean foreignKeysColsLoading = false;
-	private boolean foreignKeysReferencedColsLoading = false;
+	private boolean foreignKeysColsLoading				= false;
+	private boolean foreignKeysReferencedColsLoading	= false;
 	
-	private boolean triggerPropertyLoading = false;
+	private boolean triggerPropertyLoading				= false;
 	
 	/**
 	 * Creates new form EditTableDialog
+	 * @param parent
+	 * @param tableElement
+	 * @param databaseModel
 	 */
-	public EditTableDialog(java.awt.Window parent, TableElement tableElement, TablesContainer tables) {
+	public EditTableDialog(java.awt.Window parent, TableElement tableElement, DatabaseModel databaseModel) {
 		super(parent, Dialog.ModalityType.APPLICATION_MODAL);
 		
+		this.objColTableModel = new ColTableModel();
+		
 		objTableElement = tableElement;
-		this.tables = tables;
+		this.databaseModel = databaseModel;
 		
 		initModels();
 		initComponents();
 		myPostInit();
 	}
 	
-	public void initModels() {
+	private void initModels() {
 		
-		UmlTable umlTable = (UmlTable) objTableElement.getModelElement();
+		tableModel = databaseModel.getTableByName(((UmlTable) objTableElement.getModelElement()).getTableModel().getName());
 		
-		for (UmlTableCol col : umlTable.getCols()) {
-			objColTableModel.addEntry((UmlTableCol) col.clone());
-			objIndexColsTableModel.addEntry(false, col.getName(), UmlTableIndex.order.ASC);
+		if(tableModel == null) {
+			
+			throw new RuntimeException("Trying to edit non-existing table.");
 		}
 		
-		for (UmlTableIndex index : umlTable.getIndexes()) {
-			objIndexTableModel.addEntry((UmlTableIndex) index.clone());
+		for (Column col : tableModel.getCols()) {
+			objColTableModel.addEntry(col);
+			objIndexColsTableModel.addEntry(false, col.getName(), IndexOrders.ASC);
 		}
 		
-		for (UmlTableForeignKey foreign : umlTable.getForeignKeys()) {
-			objForeignKeyTableModel.addEntry((UmlTableForeignKey) foreign.clone());
+		for (Index index : tableModel.getIndexes()) {
+			objIndexTableModel.addEntry(index);
 		}
 		
-		for (UmlTableTrigger trigger : umlTable.getTriggers()) {
-			objTriggerTableModel.addEntry((UmlTableTrigger) trigger.clone());
+		for (ForeignKey foreign : tableModel.getForeignKeys()) {
+			objForeignKeyTableModel.addEntry(foreign);
+		}
+		
+		for (Trigger trigger : tableModel.getTriggers()) {
+			objTriggerTableModel.addEntry(trigger);
 		}
 	}
 	
 	private void myPostInit() {
 		
-		UmlTable umlTable = (UmlTable) objTableElement.getModelElement();
+		tableName.setText(tableModel.getName());
 		
-		tableName.setText(umlTable.getName());
+		((PlainDocument) tableName.getDocument()).setDocumentFilter(
+			DocumentFilterFactory.buildFilter(DocumentFilterFactory.DocumentFilterType.DATABASE_COLUMN_NAME_LENGTH, false));
 		
 		tableName.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -142,47 +178,46 @@ public class EditTableDialog extends javax.swing.JDialog {
 			
 			public void textChanged() {
 				
-				if(tables.existsTableByName(tableName.getText())) {
+				if(databaseModel.containsTableByName(tableName.getText())) {
 					
 					SwingUtilities.invokeLater(new Runnable() {
 
 						@Override
 						public void run() {
 							tableName.setText("");
-							objTableElement.setLabelText("");
 						}
 					});
 				} else {
 					
-					objTableElement.setLabelText(tableName.getText());
+					tableModel.setName(tableName.getText());
 				}
 				
 				foreignKeyTable.getColumnModel().getColumn(1).setCellEditor(
-					new DefaultCellEditor(new JComboBox(tables.getTablesComboBoxModel())));
+					new DefaultCellEditor(new JComboBox(databaseModel.getTablesComboBoxModel())));
 			}
 		});
 		
 		
-		colTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JComboBox(Domain.getTableColTypes())));
+		colTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JComboBox(DataType.getTableColTypes())));
 		setColsTableListeners();
 		
-		indexTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JComboBox(UmlTableIndex.getTableIndexTypes())));
+		indexTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JComboBox(Index.getTableIndexTypes())));
 		setIndexTableListeners();
 		
 		foreignKeyTable.getColumnModel().getColumn(1).setCellEditor(createFkTableTablesCellEditor());
 		foreignKeyTable.getColumnModel().getColumn(2).setCellEditor(
-				new DefaultCellEditor(new JComboBox(UmlTableForeignKey.getForeignKeyActions())));
+				new DefaultCellEditor(new JComboBox(ForeignKey.getForeignKeyActions())));
 		foreignKeyTable.getColumnModel().getColumn(3).setCellEditor(
-				new DefaultCellEditor(new JComboBox(UmlTableForeignKey.getForeignKeyActions())));
+				new DefaultCellEditor(new JComboBox(ForeignKey.getForeignKeyActions())));
 		setForeignKeyTableListeners();
 		
-		triggerTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JComboBox(UmlTableTrigger.getFiringTimeComboBoxModel())));
+		triggerTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JComboBox(Trigger.getFiringTimeComboBoxModel())));
 		setTriggerTableListeners();
 	}
 	
 	private DefaultCellEditor createFkTableTablesCellEditor() {
 		
-		final DefaultCellEditor editor = new DefaultCellEditor(new JComboBox(tables.getTablesComboBoxModel()));
+		final DefaultCellEditor editor = new DefaultCellEditor(new JComboBox(databaseModel.getTablesComboBoxModel()));
 		
 		editor.addCellEditorListener(new CellEditorListener() {
 
@@ -214,99 +249,73 @@ public class EditTableDialog extends javax.swing.JDialog {
 	@Override
 	public String getName() { return tableName.getText(); }
 	
-	public List<UmlTableCol> getCols() {
-		List<UmlTableCol> cols =
+	public List<Column> getCols() {
+		
+		List<Column> cols =
 			((ColTableModel) colTable.getModel()).getEntries();
-		List<UmlTableCol> result = new ArrayList<UmlTableCol>();
-		for (UmlTableCol col : cols) {
+		
+		List<Column> result = new ArrayList<Column>();
+		
+		for (Column col : cols) {
 			
-			if(!col.getName().isEmpty()) {
+			if(!col.getName().isEmpty()
+				&& col.getDataType().checkValid()) {
 				
-				UmlTableCol tableCol = (UmlTableCol) UmlTableCol.getPrototype().clone();
-				
-				tableCol.setName(col.getName());
-				tableCol.setColType(col.getColType());
-				tableCol.setNn(col.getNn());
-				
-				result.add(tableCol);
+				result.add(col);
 			}
 		}
+		
 		return result;
 	}
 	
-	public List<UmlTableIndex> getIndexes() {
+	public List<Index> getIndexes() {
 		
-		List<UmlTableIndex> indexes =
+		List<Index> indexes =
 			((IndexTableModel) indexTable.getModel()).getEntries();
 		
-		List<UmlTableIndex> result = new ArrayList<UmlTableIndex>();
+		List<Index> result = new ArrayList<Index>();
 		
-		for (UmlTableIndex index : indexes) {
+		for (Index index : indexes) {
 			
 			if(index.checkValid()) {
 				
-				UmlTableIndex tableIndex = (UmlTableIndex) UmlTableIndex.getPrototype().clone();
-				
-				tableIndex.setName(index.getName());
-				tableIndex.setiIndexType(index.getiIndexType());
-				tableIndex.setCols(index.getCols());
-				
-				result.add(tableIndex);
+				result.add(index);
 			}
 		}
 		
 		return result;
 	}
 	
-	public List<UmlTableForeignKey> getForeignKeys() {
+	public List<ForeignKey> getForeignKeys() {
 		
-		List<UmlTableForeignKey> foreignKeys =
+		List<ForeignKey> foreignKeys =
 			((ForeignKeyTableModel) foreignKeyTable.getModel()).getEntries();
 		
-		List<UmlTableForeignKey> result = new ArrayList<UmlTableForeignKey>();
+		List<ForeignKey> result = new ArrayList<ForeignKey>();
 		
-		for (UmlTableForeignKey foreignKey : foreignKeys) {
+		for (ForeignKey foreignKey : foreignKeys) {
 			
 			if(foreignKey.checkValid()) {
 				
-				UmlTableForeignKey tableFk = (UmlTableForeignKey) UmlTableForeignKey.getPrototype().clone();
-				
-				tableFk.setName(foreignKey.getName());
-				tableFk.setReferencedTable(foreignKey.getReferencedTable());
-				tableFk.setOnDeleteAction(foreignKey.getOnDeleteAction());
-				tableFk.setOnUpdateAction(foreignKey.getOnUpdateAction());
-				tableFk.setKeyCols(foreignKey.getKeyCols());
-				tableFk.setReferencedCols(foreignKey.getReferencedCols());
-				
-				result.add(tableFk);
+				result.add(foreignKey);
 			}
 		}
 		
 		return result;
 	}
 	
-	public List<UmlTableTrigger> getTriggers() {
+	public List<Trigger> getTriggers() {
 		
-		List<UmlTableTrigger> triggers =
+		List<Trigger> triggers =
 			((TriggerTableModel) triggerTable.getModel()).getEntries();
 		
-		List<UmlTableTrigger> result = new ArrayList<UmlTableTrigger>();
+		List<Trigger> result = new ArrayList<Trigger>();
 		
-		for (UmlTableTrigger trigger : triggers) {
+		for (Trigger trigger : triggers) {
 			
 			if(trigger.checkValid()) {
 				
-				UmlTableTrigger tableTrigger = (UmlTableTrigger) UmlTableTrigger.getPrototype().clone();
-				
-				tableTrigger.setName(trigger.getName());
-				tableTrigger.setActive(trigger.isActive());
-				tableTrigger.setFiringTime(trigger.getFiringTime());
-				tableTrigger.setInsert(trigger.getInsert());
-				tableTrigger.setUpdate(trigger.getUpdate());
-				tableTrigger.setDelete(trigger.getDelete());
-				tableTrigger.setCommand(trigger.getCommand());
-				
-				result.add(tableTrigger);
+				result.add(trigger);
 			}
 		}
 		
@@ -622,12 +631,12 @@ public class EditTableDialog extends javax.swing.JDialog {
 			|| index < 0)
 			return;
 		
-		List<IndexCol> lCols = new LinkedList<IndexCol>();
+		List<IndexColumn> lCols = new LinkedList<IndexColumn>();
 		
-		for (IndexCol col : objIndexColsTableModel.getEntries()) {
+		for (IndexColumn col : objIndexColsTableModel.getEntries()) {
 			
 			if(col.getChecked()) {
-				lCols.add(new IndexCol(true, col.getName(), col.getoOrder()));
+				lCols.add(new IndexColumn(true, col.getName(), col.getoOrder()));
 			}
 		}
 		
@@ -650,18 +659,18 @@ public class EditTableDialog extends javax.swing.JDialog {
 		IndexColsTableModel indexColsTableModel = ((IndexColsTableModel) indexColsTable.getModel());
 		indexColsTableModel.clearEntries();
 		
-		for (UmlTableCol tableCol : colTableModel.getEntries()) {
+		for (Column tableCol : colTableModel.getEntries()) {
 			
 			if(!tableCol.getName().isEmpty()) {
 				
 				if(indexTableModel.getEntry(index).isColByName(tableCol.getName())) {
 					
-					IndexCol col = indexTableModel.getEntry(index).getColByName(tableCol.getName());
+					IndexColumn col = indexTableModel.getEntry(index).getColByName(tableCol.getName());
 					indexColsTableModel.addEntry(col.getChecked(), tableCol.getName(), col.getoOrder());
 					
 				} else {
 					
-					indexColsTableModel.addEntry(false, tableCol.getName(), UmlTableIndex.order.ASC);
+					indexColsTableModel.addEntry(false, tableCol.getName(), IndexOrders.ASC);
 					
 				}
 			}
@@ -724,18 +733,22 @@ public class EditTableDialog extends javax.swing.JDialog {
 			ColTableModel colTableModel =
 				((ColTableModel) colTable.getModel());
 			
-			for(UmlTableCol tableCol : colTableModel.getEntries()) {
+			for(Column tableCol : colTableModel.getEntries()) {
 				
 				foreignKeyRefColsTableModel.addEntry(false, tableCol.getName());
 			}
 		
 		} else {
 		
-			for (UmlTable table : tables.getTables()) {
-
+			Iterator<Table> iterator = databaseModel.getTables().iterator();
+			
+			while(iterator.hasNext()) {
+				
+				Table table = iterator.next();
+				
 				if(table.getName().equals(refTableName)) {
 
-					for(UmlTableCol tableCol : table.getCols()) {
+					for(Column tableCol : table.getCols()) {
 
 						foreignKeyRefColsTableModel.addEntry(false, tableCol.getName());
 					}
@@ -763,7 +776,7 @@ public class EditTableDialog extends javax.swing.JDialog {
 		ForeignKeyColsTableModel foreignKeyColsTableModel = ((ForeignKeyColsTableModel) fkColsTable.getModel());
 		foreignKeyColsTableModel.clearEntries();
 		
-		for (UmlTableCol tableCol : colTableModel.getEntries()) {
+		for (Column tableCol : colTableModel.getEntries()) {
 			
 			if(!tableCol.getName().isEmpty()) {
 				
@@ -785,7 +798,7 @@ public class EditTableDialog extends javax.swing.JDialog {
 		
 		if(foreignKeyModel.getEntry(index).getReferencedTable().equals(tableName.getText())) {
 			
-			for(UmlTableCol tableCol : colTableModel.getEntries()) {
+			for(Column tableCol : colTableModel.getEntries()) {
 				
 				if(foreignKeyModel.getEntry(index).isReferencedColByName(tableCol.getName())) {
 						
@@ -799,11 +812,15 @@ public class EditTableDialog extends javax.swing.JDialog {
 			}
 		} else {
 			
-			for (UmlTable table : tables.getTables()) {
-
+			Iterator<Table> iterator = databaseModel.getTables().iterator();
+			
+			while(iterator.hasNext()) {
+				
+				Table table = iterator.next();
+				
 				if(foreignKeyModel.getEntry(index).getReferencedTable().equals(table.getName())) {
 
-					for(UmlTableCol tableCol : table.getCols()) {
+					for(Column tableCol : table.getCols()) {
 
 						if(foreignKeyModel.getEntry(index).isReferencedColByName(tableCol.getName())) {
 
@@ -875,6 +892,7 @@ public class EditTableDialog extends javax.swing.JDialog {
         colRemoveButton = new javax.swing.JButton();
         colUpButton = new javax.swing.JButton();
         colDownButton = new javax.swing.JButton();
+        colEditButton = new javax.swing.JButton();
         indexPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -929,31 +947,38 @@ public class EditTableDialog extends javax.swing.JDialog {
         colTable.setModel(objColTableModel);
         jScrollPane1.setViewportView(colTable);
 
-        colAddButton.setText("Přidat sloupec");
+        colAddButton.setText(ApplicationResources.getInstance().getString("database.column.add"));
         colAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colAddButtonActionPerformed(evt);
             }
         });
 
-        colRemoveButton.setText("Odebrat sloupec");
+        colRemoveButton.setText(ApplicationResources.getInstance().getString("database.column.remove"));
         colRemoveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colRemoveButtonActionPerformed(evt);
             }
         });
 
-        colUpButton.setText("Posunout výše");
+        colUpButton.setText(ApplicationResources.getInstance().getString("database.column.up"));
         colUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colUpButtonActionPerformed(evt);
             }
         });
 
-        colDownButton.setText("Posunout níže");
+        colDownButton.setText(ApplicationResources.getInstance().getString("database.column.down"));
         colDownButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colDownButtonActionPerformed(evt);
+            }
+        });
+
+        colEditButton.setText(ApplicationResources.getInstance().getString("database.column.edit"));
+        colEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                colEditButtonActionPerformed(evt);
             }
         });
 
@@ -966,24 +991,30 @@ public class EditTableDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(colAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(colAddButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(colUpButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(colDownButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(colEditButton, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(colRemoveButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                        .addComponent(colUpButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(colDownButton)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(colAddButton)
-                    .addComponent(colRemoveButton)
+                    .addComponent(colEditButton)
+                    .addComponent(colRemoveButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(colUpButton)
                     .addComponent(colDownButton))
                 .addContainerGap())
@@ -996,13 +1027,11 @@ public class EditTableDialog extends javax.swing.JDialog {
             .addGroup(infoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(infoPanelLayout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(infoPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tableName)))
+                        .addComponent(tableName, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         infoPanelLayout.setVerticalGroup(
@@ -1014,7 +1043,7 @@ public class EditTableDialog extends javax.swing.JDialog {
                     .addComponent(tableName))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(ApplicationResources.getInstance().getString("dialog.tableEditInfo.tab"), infoPanel);
@@ -1027,28 +1056,28 @@ public class EditTableDialog extends javax.swing.JDialog {
         indexColsTable.setModel(objIndexColsTableModel);
         jScrollPane3.setViewportView(indexColsTable);
 
-        indexAddButton.setText("Přidat index");
+        indexAddButton.setText(ApplicationResources.getInstance().getString("database.index.add"));
         indexAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 indexAddButtonActionPerformed(evt);
             }
         });
 
-        indexRemoveButton.setText("Odebrat index");
+        indexRemoveButton.setText(ApplicationResources.getInstance().getString("database.index.remove"));
         indexRemoveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 indexRemoveButtonActionPerformed(evt);
             }
         });
 
-        indexDownButton.setText("Posunout níže");
+        indexDownButton.setText(ApplicationResources.getInstance().getString("database.index.down"));
         indexDownButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 indexDownButtonActionPerformed(evt);
             }
         });
 
-        indexUpButton.setText("Posunout výše");
+        indexUpButton.setText(ApplicationResources.getInstance().getString("database.index.up"));
         indexUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 indexUpButtonActionPerformed(evt);
@@ -1063,7 +1092,7 @@ public class EditTableDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(indexAddButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1107,35 +1136,36 @@ public class EditTableDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Indexy", indexPanel);
+        jTabbedPane1.addTab(ApplicationResources.getInstance().getString("database.indexes"), indexPanel);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         foreignKeyTable.setModel(objForeignKeyTableModel);
         jScrollPane4.setViewportView(foreignKeyTable);
 
-        fkAddButton.setText("Přidat index");
+        fkAddButton.setText(ApplicationResources.getInstance().getString("database.foreignkey.add"));
+        fkAddButton.setActionCommand(ApplicationResources.getInstance().getString("database.foreignkey.add"));
         fkAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fkAddButtonActionPerformed(evt);
             }
         });
 
-        fkRemoveButton.setText("Odebrat index");
+        fkRemoveButton.setText(ApplicationResources.getInstance().getString("database.foreignkey.remove"));
         fkRemoveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fkRemoveButtonActionPerformed(evt);
             }
         });
 
-        fkUpButton.setText("Posunout výše");
+        fkUpButton.setText(ApplicationResources.getInstance().getString("database.foreignkey.up"));
         fkUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fkUpButtonActionPerformed(evt);
             }
         });
 
-        fkDownButton.setText("Posunout níže");
+        fkDownButton.setText(ApplicationResources.getInstance().getString("database.foreignkey.down"));
         fkDownButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fkDownButtonActionPerformed(evt);
@@ -1159,7 +1189,7 @@ public class EditTableDialog extends javax.swing.JDialog {
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(fkAddButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1177,7 +1207,7 @@ public class EditTableDialog extends javax.swing.JDialog {
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1205,7 +1235,7 @@ public class EditTableDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Cizí klíče", foreignPanel);
+        jTabbedPane1.addTab(ApplicationResources.getInstance().getString("database.foreignkeys"), foreignPanel);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -1216,28 +1246,28 @@ public class EditTableDialog extends javax.swing.JDialog {
         triggerCommandTextArea.setRows(5);
         jScrollPane8.setViewportView(triggerCommandTextArea);
 
-        triggerAddButton.setText("Přidat index");
+        triggerAddButton.setText(ApplicationResources.getInstance().getString("database.trigger.add"));
         triggerAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 triggerAddButtonActionPerformed(evt);
             }
         });
 
-        triggerRemoveButton.setText("Odebrat index");
+        triggerRemoveButton.setText(ApplicationResources.getInstance().getString("database.trigger.remove"));
         triggerRemoveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 triggerRemoveButtonActionPerformed(evt);
             }
         });
 
-        triggerDownButton.setText("Posunout níže");
+        triggerDownButton.setText(ApplicationResources.getInstance().getString("database.trigger.down"));
         triggerDownButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 triggerDownButtonActionPerformed(evt);
             }
         });
 
-        triggerUpButton.setText("Posunout výše");
+        triggerUpButton.setText(ApplicationResources.getInstance().getString("database.trigger.up"));
         triggerUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 triggerUpButtonActionPerformed(evt);
@@ -1257,7 +1287,7 @@ public class EditTableDialog extends javax.swing.JDialog {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                    .addComponent(jScrollPane7)
                     .addComponent(jScrollPane8)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(triggerAddButton)
@@ -1288,7 +1318,7 @@ public class EditTableDialog extends javax.swing.JDialog {
                     .addComponent(triggerInsertCheckBox)
                     .addComponent(triggerUpdateCheckBox)
                     .addComponent(triggerDeleteCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(triggerAddButton)
                     .addComponent(triggerRemoveButton)
@@ -1314,7 +1344,7 @@ public class EditTableDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Triggery", triggerPanel);
+        jTabbedPane1.addTab(ApplicationResources.getInstance().getString("database.triggers"), triggerPanel);
 
         okButtonTable.setText(ApplicationResources.getInstance().getString("stdcaption.ok"));
         okButtonTable.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1341,16 +1371,16 @@ public class EditTableDialog extends javax.swing.JDialog {
                 .addComponent(okButtonTable)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancellButtonTable)
-                .addGap(18, 18, 18))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancellButtonTable)
-                    .addComponent(okButtonTable))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(okButtonTable)
+                    .addComponent(cancellButtonTable))
                 .addContainerGap())
         );
 
@@ -1382,15 +1412,26 @@ public class EditTableDialog extends javax.swing.JDialog {
 
     private void colAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colAddButtonActionPerformed
         
-		objColTableModel.addEntry(UmlTableCol.getPrototype().create("", DatabaseColumnTypes.INTEGER));
+		EditColDialog dialog = new EditColDialog(this, null, databaseModel);
 		
-		int row = objColTableModel.getRowCount() - 1;
+		dialog.setLocationRelativeTo(this);
+		dialog.setVisible(true);
 		
-		saveIndexColsTable(indexTable.convertRowIndexToModel(lastModelIndexSelect));
-		loadIndexColsTable(indexTable.convertRowIndexToModel(lastModelIndexSelect));
+		if(dialog.isOk()) {
+
+			Column column = dialog.getColumn();
+			
+			if(column.getDataType().checkValid()) {
+				
+				objColTableModel.addEntry(column);
+				
+			}
 		
-		colTable.changeSelection(colTable.convertRowIndexToView(row), 0, false, false);
-		colTable.requestFocus();
+			int row = objColTableModel.getRowCount() - 1;
+
+			colTable.changeSelection(colTable.convertRowIndexToView(row), 0, false, false);
+			colTable.requestFocus();
+		}
     }//GEN-LAST:event_colAddButtonActionPerformed
 
     private void colRemoveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colRemoveButtonActionPerformed
@@ -1427,7 +1468,7 @@ public class EditTableDialog extends javax.swing.JDialog {
 
     private void indexAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indexAddButtonActionPerformed
         
-		objIndexTableModel.addEntry(UmlTableIndex.getPrototype().create("", UmlTableIndex.indexType.INDEX));
+		objIndexTableModel.addEntry(Index.getPrototype().create("", IndexTypes.INDEX));
 		
 		int row = objIndexTableModel.getRowCount() - 1;
 		
@@ -1490,11 +1531,11 @@ public class EditTableDialog extends javax.swing.JDialog {
 
     private void fkAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fkAddButtonActionPerformed
         
-		objForeignKeyTableModel.addEntry(UmlTableForeignKey.getPrototype().create(
+		objForeignKeyTableModel.addEntry(ForeignKey.getPrototype().create(
 			"fk"
 			, tableName.getText()
-			, UmlTableForeignKey.action.CASCADE
-			, UmlTableForeignKey.action.CASCADE));
+			, ForeignKeyActions.CASCADE
+			, ForeignKeyActions.CASCADE));
 		
 		int row = objForeignKeyTableModel.getRowCount() - 1;
 		
@@ -1561,9 +1602,9 @@ public class EditTableDialog extends javax.swing.JDialog {
 
     private void triggerAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_triggerAddButtonActionPerformed
 		
-		objTriggerTableModel.addEntry(UmlTableTrigger.getPrototype().create(
+		objTriggerTableModel.addEntry(Trigger.getPrototype().create(
 			"trigger"
-			, UmlTableTrigger.firing.AFTER
+			, TriggerFiringTime.AFTER
 			, true
 			, false
 			, false
@@ -1633,10 +1674,34 @@ public class EditTableDialog extends javax.swing.JDialog {
 		}
     }//GEN-LAST:event_triggerDownButtonActionPerformed
 
+    private void colEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colEditButtonActionPerformed
+
+		int row = colTable.convertRowIndexToModel(colTable.getSelectedRow());
+		
+		if(row >= 0) {
+			
+			EditColDialog dialog = new EditColDialog(this, objColTableModel.getEntries().get(row), databaseModel);
+		
+			dialog.setLocationRelativeTo(this);
+			dialog.setVisible(true);
+
+			if(dialog.isOk()) {
+
+				Column column = dialog.getColumn();
+
+				objColTableModel.getEntries().set(row, column);
+				objColTableModel.fireTableDataChanged();
+
+				colTable.requestFocus();
+			}
+		}
+    }//GEN-LAST:event_colEditButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancellButtonTable;
     private javax.swing.JButton colAddButton;
     private javax.swing.JButton colDownButton;
+    private javax.swing.JButton colEditButton;
     private javax.swing.JButton colRemoveButton;
     private javax.swing.JTable colTable;
     private javax.swing.JButton colUpButton;

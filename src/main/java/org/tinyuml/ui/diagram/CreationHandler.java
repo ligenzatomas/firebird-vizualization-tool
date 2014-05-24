@@ -73,6 +73,18 @@ public class CreationHandler implements EditorMode {
     element.setParent(editor.getDiagram());
     cachedBounds = null;
   }
+  
+  public Node createElement() {
+	  
+	CompositeNode parent = editor.getDiagram();
+	
+	AddNodeCommand createCommand = new AddNodeCommand(
+		editor, parent, element, editor.getX(), editor.getY());
+	
+	editor.execute(createCommand);
+	
+	return element;
+  }
 
   /**
    * {@inheritDoc}

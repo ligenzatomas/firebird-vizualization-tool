@@ -1,19 +1,36 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui.diagram;
 
 import java.awt.Dialog;
+import org.tinyuml.model.ForeignKeyCol;
 import org.tinyuml.model.Relation;
+import org.tinyuml.model.UmlRelation;
 import org.tinyuml.model.UmlTable;
 import org.tinyuml.umldraw.eer.Relationship;
-import org.tinyuml.umldraw.eer.TableElement;
 import org.tinyuml.util.ApplicationResources;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class EditRelationshipDialog extends javax.swing.JDialog {
 
@@ -44,8 +61,70 @@ public class EditRelationshipDialog extends javax.swing.JDialog {
 		referencedTable = (UmlTable) ((Relation) relationship.getModelElement()).getElement2();
 		
 		referencingTableName.setText(referencingTable.getName());
+		referencingTableForeignKey.setText(((UmlRelation) relationship.getRelation()).getForeignKey().getName());
+		
+		String keyNames = "";
+		
+		for(ForeignKeyCol col : ((UmlRelation) relationship.getRelation()).getForeignKey().getKeyCols()) {
+			
+			if(keyNames.equals(""))
+				keyNames += "\n";
+			
+			keyNames += col.getName() + ": " + referencingTable.getColByName(col.getName()).getColType().name();
+		}
+		referencingTableCol.setText(keyNames);
+		
+		if(relationship.getRelation().isElement1Mandatory())
+			referencingTableMandatoryCheckBox.setSelected(true);
+		
 		
 		referencedTableName.setText(referencedTable.getName());
+		
+		String indexNames = "";
+		
+		for(ForeignKeyCol col : ((UmlRelation) relationship.getRelation()).getForeignKey().getReferencedCols()) {
+			
+			if(indexNames.equals(""))
+				indexNames += "\n";
+			
+			indexNames += col.getName() + ": " + referencedTable.getColByName(col.getName()).getColType().name();
+		}
+		referencedTableCol.setText(indexNames);
+		
+		if(relationship.getRelation().isElement2Mandatory())
+			referencedTableMandatoryCheckBox.setSelected(true);
+		
+		if(relationship.getRelation().isOneOnOne())
+			oneToOneRadioButton.setSelected(true);
+		else
+			oneToManyRadioButton.setSelected(true);
+		
+		identifyingCheckBox.setSelected(relationship.getRelation().isIdentifying());
+	}
+	
+	public boolean isReferencingTableMandatory() {
+		
+		return referencingTableMandatoryCheckBox.isSelected();
+	}
+	
+	public boolean isReferencedTableMandatory() {
+		
+		return referencedTableMandatoryCheckBox.isSelected();
+	}
+	
+	public boolean isOneToOne() {
+		
+		return oneToOneRadioButton.isSelected();
+	}
+	
+	public boolean isOneToMany() {
+		
+		return oneToManyRadioButton.isSelected();
+	}
+	
+	public boolean isIdentifying() {
+		
+		return identifyingCheckBox.isSelected();
 	}
 	
 	public boolean isOk() { return isOk; }
@@ -91,7 +170,7 @@ public class EditRelationshipDialog extends javax.swing.JDialog {
 
         referencingTableForeignKey.setText("jLabel1");
 
-        referencingTableColLabel.setText("Col:");
+        referencingTableColLabel.setText("Cols:");
 
         referencingTableCol.setText("jLabel1");
 
@@ -129,9 +208,9 @@ public class EditRelationshipDialog extends javax.swing.JDialog {
                 .addGroup(referencingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(referencingTableColLabel)
                     .addComponent(referencingTableCol))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(referencingTableMandatoryCheckBox)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         referencedPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Referenced Table"));
@@ -139,7 +218,7 @@ public class EditRelationshipDialog extends javax.swing.JDialog {
         referencedTableName.setFont(new java.awt.Font("Ubuntu Mono", 1, 13)); // NOI18N
         referencedTableName.setText("jLabel1");
 
-        referencedTableColLabel.setText("Col:");
+        referencedTableColLabel.setText("Cols:");
 
         referencedTableCol.setText("jLabel1");
 
@@ -155,7 +234,7 @@ public class EditRelationshipDialog extends javax.swing.JDialog {
                     .addComponent(referencedTableName)
                     .addGroup(referencedPanelLayout.createSequentialGroup()
                         .addComponent(referencedTableColLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(4, 4, 4)
                         .addComponent(referencedTableCol))
                     .addComponent(referencedTableMandatoryCheckBox))
                 .addContainerGap(189, Short.MAX_VALUE))
@@ -169,9 +248,9 @@ public class EditRelationshipDialog extends javax.swing.JDialog {
                 .addGroup(referencedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(referencedTableColLabel)
                     .addComponent(referencedTableCol))
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(referencedTableMandatoryCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         buttonGroup1.add(oneToManyRadioButton);
@@ -206,7 +285,7 @@ public class EditRelationshipDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(referencingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(referencingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(referencedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(oneToManyRadioButton)
@@ -214,7 +293,7 @@ public class EditRelationshipDialog extends javax.swing.JDialog {
                 .addComponent(oneToOneRadioButton)
                 .addGap(18, 18, 18)
                 .addComponent(identifyingCheckBox)
-                .addContainerGap(196, Short.MAX_VALUE))
+                .addContainerGap(223, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Relationship", jPanel1);

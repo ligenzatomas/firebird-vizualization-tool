@@ -68,20 +68,23 @@ public class DiagramTree extends JTree implements MouseListener {
     setShowsRootHandles(true);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void mouseClicked(MouseEvent e) {
-    if (e.getClickCount() == 2) {
-      TreePath path = getPathForLocation(e.getX(), e.getY());
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-      path.getLastPathComponent();
-      if (node.getUserObject() instanceof GeneralDiagram) {
-        appState.openExistingStructureEditor((GeneralDiagram)
-          node.getUserObject());
-      }
-    }
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void mouseClicked(MouseEvent e) {
+		if (e.getClickCount() == 2) {
+			TreePath path = getPathForLocation(e.getX(), e.getY());
+
+			if(path != null) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+				path.getLastPathComponent();
+				if (node.getUserObject() instanceof GeneralDiagram) {
+				  appState.openExistingStructureEditor((GeneralDiagram)
+					node.getUserObject());
+				}
+			}
+		}
+	}
 
   /**
    * {@inheritDoc}

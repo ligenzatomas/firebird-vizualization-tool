@@ -28,22 +28,24 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
+import org.firebirdvisualizationtool.database.firebird.Connections;
 import org.tinyuml.model.UmlDiagram;
 import org.tinyuml.ui.commands.DeleteDiagramCommand;
 import org.tinyuml.ui.commands.ModelReader;
 import org.tinyuml.ui.commands.ModelWriter;
 import org.tinyuml.ui.commands.PngExporter;
 import org.tinyuml.ui.commands.SvgExporter;
-import org.firebirdvisualizationtool.database.firebird.ConnectionProperties;
+import org.tinyuml.ui.diagram.DiagramEditor;
+import org.tinyuml.ui.diagram.EERDiagramEditor;
+import org.tinyuml.ui.wizard.ForwardWizard;
+import org.tinyuml.ui.wizard.ReverseWizard;
 import org.tinyuml.util.AppCommandListener;
 import org.tinyuml.util.ApplicationResources;
-import org.tinyuml.util.Crypter;
 import org.tinyuml.util.MethodCall;
 
 /**
@@ -109,6 +111,10 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
 			getClass().getMethod("displayManageSequences")));
 		selectorMap.put("MANAGE_DOMAINS", new MethodCall(
 			getClass().getMethod("displayManageDomains")));
+		selectorMap.put("FORWARD_ENGINEER", new MethodCall(
+			getClass().getMethod("forwardEngineer")));
+		selectorMap.put("REVERSE_ENGINEER", new MethodCall(
+			getClass().getMethod("reverseEngineer")));
 	} catch (NoSuchMethodException ex) {
 	  ex.printStackTrace();
 	}
@@ -226,7 +232,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
    */
   private FileNameExtensionFilter createModelFileFilter() {
     return new FileNameExtensionFilter(
-      "TinyUML serialized model file (*.tsm)", "tsm");
+      "Firebird Vizualization Tool serialized model file (*.fvt)", "fvt");
   }
 
   /**
@@ -332,36 +338,20 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
   }
   
 	public void displayManageConnections() throws FileNotFoundException, IOException, ClassNotFoundException {
-
-		File file = new File("connections.dat");
 		
-		LinkedList<ConnectionProperties> connections = new LinkedList<ConnectionProperties>();
-		
-		if(file.exists()) {
-			
-			connections = (LinkedList<ConnectionProperties>) Crypter.decryptObjectFromFile("connections.dat");
-		}
-		
-		ManageConnections dialog = new ManageConnections((Window) getShellComponent(), connections);
+		ManageConnections dialog = new ManageConnections((Window) getShellComponent(), Connections.getInstance().getConnections());
 
 		dialog.setLocationRelativeTo(getShellComponent());
 		dialog.setVisible(true);
 		
 		if (dialog.isOk()) {
 			
-			connections = dialog.getConnections();
+			Connections.getInstance().setConnections(dialog.getConnections());
 			
-			file.createNewFile();
-			
-			if(!file.canWrite())
+			if(!Connections.getInstance().saveConnections())
 				JOptionPane.showMessageDialog(getShellComponent(),
 					"Nelze zapisovat do souboru",
 					"Zápis souboru", JOptionPane.INFORMATION_MESSAGE);
-			
-			if(!connections.isEmpty()) {
-				
-				Crypter.encryptObjectToFile(connections, "connections.dat");
-			}
 		}
 	}
 	
@@ -390,6 +380,30 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
 			appState.getDatabaseModel().setDomains(dialog.getDomains());
 		}
 	}
+	
+	public void forwardEngineer() {
+		
+		ForwardWizard wizard = new ForwardWizard(appState.getDatabaseModel());
+		wizard.setVisible(true);
+	}
+	
+	public void reverseEngineer() {
+		
+		DiagramEditor editor = appState.getCurrentEditor();
+		
+		if(!(editor instanceof EERDiagramEditor)) {
+			appState.openNewEEREditor();
+			editor = appState.getCurrentEditor();
+		}
+		
+		ReverseWizard wizard = new ReverseWizard((EERDiagramEditor) editor);
+		wizard.setVisible(true);
+		
+		if(wizard.isOk()) {
+			
+			wizard.dispose();
+		}
+	}
 
   /**
    * Shows the about dialog.
@@ -405,7 +419,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
    */
   public void displayHelpContents() {
     try {
-      URI helpUri = new URI("http://www.tinyuml.org/Wikka/UserDocs");
+      URI helpUri = new URI("https://github.com/ligenzatomas/firebird-vizualization-tool");
       Desktop.getDesktop().browse(helpUri);
     } catch (IOException ex) {
       JOptionPane.showMessageDialog(getShellComponent(),

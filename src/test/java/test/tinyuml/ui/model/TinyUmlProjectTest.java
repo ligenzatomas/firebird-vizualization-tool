@@ -21,6 +21,7 @@ package test.tinyuml.ui.model;
 
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
+import org.tinyuml.model.DatabaseModel;
 import org.tinyuml.model.UmlDiagram;
 import org.tinyuml.model.UmlModel;
 import org.tinyuml.ui.model.TinyUmlProject;
@@ -37,7 +38,8 @@ public class TinyUmlProjectTest extends MockObjectTestCase {
    */
   public void testSetters() {
     Mock mockModel = mock(UmlModel.class);
-    TinyUmlProject project = new TinyUmlProject((UmlModel) mockModel.proxy());
+	Mock mockDatabaseModel = mock(DatabaseModel.class);
+    TinyUmlProject project = new TinyUmlProject((UmlModel) mockModel.proxy(), (DatabaseModel) mockDatabaseModel.proxy());
     assertEquals(mockModel.proxy(), project.getModel());
     assertEquals(0, project.getOpenDiagrams().size());
     Mock mockDiagram0 = mock(UmlDiagram.class);

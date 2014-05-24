@@ -1,9 +1,9 @@
 /**
- * Copyright 2007 Wei-ju Wu
+ * Copyright 2014 Tomáš Ligenza
  *
- * This file is part of TinyUML.
+ * This file is part of Firebird Visualization Tool.
  *
- * TinyUML is free software; you can redistribute it and/or modify
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
@@ -14,9 +14,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
+ * along with Firebird Visualization Tool; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui;
 
 import java.awt.Dimension;
@@ -25,10 +26,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 /**
- * This class manages the a toolbar for a static structure dialog.
- *
- * @author Wei-ju Wu
- * @version 1.0
+ * @author Tomáš Ligenza
  */
 public class EEREditorToolbarManager
 	extends AbstractToolbarManager {
@@ -42,15 +40,15 @@ public class EEREditorToolbarManager
 	  buttongroup = new ButtonGroup();
 	  JToolBar toolbar = getToolbar();
 	  toolbar.add(createToggleButtonWithName(buttongroup, "select"));
-	  toolbar.add(createToggleButtonWithName(buttongroup, "delete"));
+	 // toolbar.add(createToggleButtonWithName(buttongroup, "delete"));
 	  
 	  toolbar.addSeparator(new Dimension(10, 10));
 	  
-	  toolbar.add(createToggleButtonWithName(buttongroup, "layer"));
+	 /* toolbar.add(createToggleButtonWithName(buttongroup, "layer"));
 	  toolbar.add(createToggleButtonWithName(buttongroup, "note"));
 	  toolbar.add(createToggleButtonWithName(buttongroup, "noteconnector"));
 	  
-	  toolbar.addSeparator(new Dimension(10, 10));
+	  toolbar.addSeparator(new Dimension(10, 10));*/
 	  
 	  toolbar.add(createToggleButtonWithName(buttongroup, "table"));
 	  toolbar.add(createToggleButtonWithName(buttongroup, "view"));
@@ -69,12 +67,6 @@ public class EEREditorToolbarManager
 	  doClick("SELECT_MODE");
 	}
 
-	/**
-	 * Creates the specified toggle button.
-	 * @param aButtonGroup an optional ButtonGroup to add to
-	 * @param name the toggle button name
-	 * @return the toggle button
-	 */
 	private JToggleButton createToggleButtonWithName(ButtonGroup aButtonGroup,
 	  String name) {
 	  return createToggleButton(aButtonGroup, "eertoolbar." + name);

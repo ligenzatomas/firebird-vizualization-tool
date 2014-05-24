@@ -1,22 +1,37 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui;
 
 import java.awt.Dialog;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.TreeMap;
+import java.util.Iterator;
+import java.util.TreeSet;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes;
+import org.tinyuml.model.DefaultNamedElementComparator;
 import org.tinyuml.model.Domain;
 import org.tinyuml.ui.model.DomainModel;
 import org.tinyuml.util.ApplicationResources;
@@ -24,22 +39,24 @@ import org.tinyuml.util.TableAdjuster;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class ManageDomains extends javax.swing.JDialog {
 	
 	private boolean isOk;
 	
-	private DomainModel domainModel = new DomainModel();
-	private TableAdjuster adjuster = new TableAdjuster();
+	private DomainModel		domainModel = new DomainModel();
+	private TableAdjuster	adjuster	= new TableAdjuster();
 	
-	public ManageDomains(java.awt.Window parent, TreeMap<String, Domain> aDomains) {
+	public ManageDomains(java.awt.Window parent, TreeSet<Domain> aDomains) {
 		
 		super(parent, Dialog.ModalityType.APPLICATION_MODAL);
 		
-		for(Domain seq : aDomains.values()) {
+		Iterator<Domain> iterator = aDomains.iterator();
+		
+		while(iterator.hasNext()) {
 			
-			domainModel.addEntry(seq);
+			domainModel.addEntry(iterator.next());
 		}
 		
 		initComponents();
@@ -58,7 +75,6 @@ public class ManageDomains extends javax.swing.JDialog {
 			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				
-				System.out.println(" propertyChange ");
 				adjuster.adjustColumns(domainTable);
 			}
 		});
@@ -67,8 +83,6 @@ public class ManageDomains extends javax.swing.JDialog {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				
-				System.out.println(" tableChanged ");
 				
 				if (e.getType() == TableModelEvent.UPDATE
 						&& e.getColumn() > 0) {
@@ -90,8 +104,6 @@ public class ManageDomains extends javax.swing.JDialog {
 			public void valueChanged(ListSelectionEvent e) {
 				
 				int index = domainTable.convertRowIndexToModel(domainTable.getSelectedRow());
-				
-				System.out.println(" selectChange - index - " + index + " - isAdjusting - " + e.getValueIsAdjusting());
 				
 				if(e.getValueIsAdjusting())
 					return;
@@ -116,15 +128,15 @@ public class ManageDomains extends javax.swing.JDialog {
 		});*/
 	}
 	
-	public TreeMap<String, Domain> getDomains() {
+	public TreeSet<Domain> getDomains() {
 		
-		TreeMap<String, Domain> domains = new TreeMap<String, Domain>();
+		TreeSet<Domain> domains = new TreeSet<Domain>(new DefaultNamedElementComparator());
 		
 		for (Domain dom : domainModel.getEntries()) {
 			
 			if(dom.checkValid()) {
 				
-				domains.put(dom.getName(), dom);
+				domains.add(dom);
 			}
 		}
 		
@@ -165,21 +177,21 @@ public class ManageDomains extends javax.swing.JDialog {
             }
         });
 
-        addDomainButton.setText("Přidat doménu");
+        addDomainButton.setText(ApplicationResources.getInstance().getString("database.domain.add"));
         addDomainButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addDomainButtonActionPerformed(evt);
             }
         });
 
-        deleteDomainButton.setText("Smazat doménu");
+        deleteDomainButton.setText(ApplicationResources.getInstance().getString("database.domain.remove"));
         deleteDomainButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteDomainButtonActionPerformed(evt);
             }
         });
 
-        editDomainButton.setText("Editovat doménu");
+        editDomainButton.setText(ApplicationResources.getInstance().getString("database.domain.edit"));
         editDomainButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editDomainButtonActionPerformed(evt);
@@ -193,7 +205,7 @@ public class ManageDomains extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(addDomainButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -247,7 +259,7 @@ public class ManageDomains extends javax.swing.JDialog {
 			Domain domain = dialog.getDomain();
 			
 			if(domain.checkValid()) {
-				
+
 				domainModel.addEntry(domain);
 			}
 		
@@ -283,7 +295,7 @@ public class ManageDomains extends javax.swing.JDialog {
 		int row = domainTable.convertRowIndexToModel(domainTable.getSelectedRow());
 		
 		if(row >= 0) {
-			
+
 			EditDomainDialog dialog = new EditDomainDialog(this, domainModel.getEntries().get(row));
 		
 			dialog.setLocationRelativeTo(this);
@@ -291,9 +303,9 @@ public class ManageDomains extends javax.swing.JDialog {
 
 			if(dialog.isOk()) {
 
-				Domain domain = dialog.getDomain();
+				//Domain domain = dialog.getDomain();
 
-				domainModel.getEntries().set(row, domain);
+				//domainModel.getEntries().set(row, domain);
 
 				domainTable.requestFocus();
 			}

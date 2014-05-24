@@ -43,7 +43,7 @@ public final class IconLoader {
     CLASS, PACKAGE, COMPONENT, DEPENDENCY, ASSOCIATION, AGGREGATION,
     COMPOSITION, INHERITANCE, INTERFACE_REALIZATION, NOTE, NOTE_CONNECTOR,
     LIFELINE, MESSAGE
-	, ERASER, EER
+	, ERASER, EERTABLE, EERVIEW, EERPROCEDURE
   }
 
   private Map<IconType, String> urlMap = new HashMap<IconType, String>();
@@ -88,7 +88,9 @@ public final class IconLoader {
     urlMap.put(IconType.ABOUT, "org/fife/plaf/Office2003/about.gif");
 	
 	urlMap.put(IconType.ERASER, "org/tinyuml/ui/eraser.png");
-	urlMap.put(IconType.EER, "org/tinyuml/ui/EER.png");
+	urlMap.put(IconType.EERTABLE, "org/tinyuml/ui/EERtable.png");
+	urlMap.put(IconType.EERVIEW, "org/tinyuml/ui/EERview.png");
+	urlMap.put(IconType.EERPROCEDURE, "org/tinyuml/ui/EERprocedure.gif");
   }
 
   /**

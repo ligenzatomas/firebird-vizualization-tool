@@ -1,26 +1,48 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui.model;
 
-import java.util.LinkedHashMap;
+import org.tinyuml.model.IndexColumn;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.swing.table.AbstractTableModel;
-import org.tinyuml.model.UmlTableIndex;
+import org.firebirdvisualizationtool.database.firebird.IndexOrders;
+import org.tinyuml.util.ApplicationResources;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class IndexColsTableModel extends AbstractTableModel {
+	
+	private static final long serialVersionUID = -3694142998063548137L;
 
-	private String[] columnNames = { "", "Sloupec", "Řazení"};
+	private final String[] columnNames = { 
+		""
+		, ApplicationResources.getInstance().getString("database.model.indexcol.column")
+		, ApplicationResources.getInstance().getString("database.model.indexcol.way")};
 	
-	private List<IndexCol> entries = new LinkedList<IndexCol>();
+	private final List<IndexColumn> entries = new LinkedList<IndexColumn>();
 	
+	@Override
 	public String getColumnName(int index) {
 		
 		return columnNames[index];
@@ -32,22 +54,22 @@ public class IndexColsTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 	
-	public void addEntry(Boolean check, String col, UmlTableIndex.order order) {
+	public void addEntry(Boolean check, String col, IndexOrders order) {
 		
 		int size = entries.size();
 		
-		entries.add(new IndexCol(check, col, order));
+		entries.add(new IndexColumn(check, col, order));
 		fireTableRowsInserted(size, size);
 	}
 	
-	public List<IndexCol> getEntries() {
+	public List<IndexColumn> getEntries() {
 		
 		return entries;
 	}
 	
 	public boolean isIndexColByName(String name) {
 		
-		for(IndexCol col : entries) {
+		for(IndexColumn col : entries) {
 			
 			if(col.getName() == name)
 				return true;
@@ -60,8 +82,8 @@ public class IndexColsTableModel extends AbstractTableModel {
 		
 		if(index < getRowCount()) {
 
-			IndexCol entryDown = entries.remove(index);
-			IndexCol entryUp = entries.remove(index - 1);
+			IndexColumn entryDown = entries.remove(index);
+			IndexColumn entryUp = entries.remove(index - 1);
 
 			entries.add(index - 1, entryDown);
 			entries.add(index, entryUp);
@@ -74,7 +96,7 @@ public class IndexColsTableModel extends AbstractTableModel {
 		
 		if(index < (getRowCount() - 1)) {
 		
-			IndexCol entryDown = entries.remove(index);
+			IndexColumn entryDown = entries.remove(index);
 			entries.add(index + 1, entryDown);
 
 			fireTableDataChanged();
@@ -140,7 +162,7 @@ public class IndexColsTableModel extends AbstractTableModel {
 			break;
 			
 			case 2:
-				entries.get(rowIndex).setoOrder((UmlTableIndex.order) value);
+				entries.get(rowIndex).setoOrder((IndexOrders) value);
 			break;
 		}
 		

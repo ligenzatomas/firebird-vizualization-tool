@@ -21,8 +21,10 @@ package org.tinyuml.umldraw.shared;
 
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.awt.geom.Dimension2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -62,10 +64,11 @@ import org.tinyuml.model.UmlModel;
  */
 public abstract class GeneralDiagram extends AbstractCompositeNode
 implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
-
-  private static final long serialVersionUID = -874538211438595440L;
+	
+	private static final long serialVersionUID = -3415331337149216390L;
   private static final int ADDITIONAL_SPACE_RIGHT = 30;
   private static final int ADDITIONAL_SPACE_BOTTOM = 30;
+  private static final int MAX_WIDTH_SPACE = 800;
 
   private int gridSize = 7;
   private String name;
@@ -187,11 +190,13 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   /**
    * {@inheritDoc}
    */
+	@Override
   public String getLabelText() { return getName(); }
 
   /**
    * {@inheritDoc}
    */
+	@Override
   public void setLabelText(String aText) {
     setName(aText);
   }
@@ -267,6 +272,7 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   /**
    * {@inheritDoc}
    */
+	@Override
   public void draw(DrawingContext drawingContext) {
     Rectangle bounds = drawingContext.getClipBounds();
     drawBackground(drawingContext, bounds);
@@ -295,7 +301,7 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
    * @param bounds the bounding Rectangle
    */
   private void drawBackground(DrawingContext drawingContext, Rectangle bounds) {
-    //System.out.println("drawBackground(), clipBounds: " + bounds);
+
     double x1 = Math.max(getAbsoluteX1(), bounds.getX());
     double y1 = Math.max(getAbsoluteY1(), bounds.getY());
     double x2 = Math.min(bounds.getX() + bounds.getWidth(),
@@ -363,6 +369,59 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
     drawingContext.draw(mainShape, Color.WHITE);
     nameLabel.draw(drawingContext);
   }
+  
+  /**
+   * TODO - non working solution, should be replaced in the future
+   * @param node
+   * @return 
+   */
+	public Point2D getFreeSpaceForElement(Node node) {
+		
+		Point2D point = new Point2D.Double(getAbsoluteX1(), getAbsoluteY1());
+		
+		double xStart = getAbsoluteX1();
+		double yStart = getAbsoluteY1();
+
+		double x = xStart, xMax = xStart + MAX_WIDTH_SPACE;
+		
+		Dimension2D size = node.getSize();
+		Rectangle2D rec = new Rectangle2D.Double(xStart, yStart, size.getWidth(), size.getHeight());
+
+		boolean found = false;
+		
+		while(found == false) {
+			
+			while(x < xMax) {
+				
+				boolean inter = false;
+				
+				for(DiagramElement el : getChildren()) {
+					
+					if(el instanceof Node && !((Node) el).equals(node)
+						&& el.intersects(rec)) {
+						
+						inter = true;
+						break;
+					}
+				}
+				
+				if(inter == false) {
+					
+					point.setLocation(rec.getX(), rec.getY());
+					found = true;
+					break;
+				}
+				
+				rec.setRect(new Rectangle2D.Double(rec.getX() + 50, rec.getY(), rec.getWidth(), rec.getHeight()));
+				x += 50;
+			}
+			
+			rec.setRect(new Rectangle2D.Double(xStart, rec.getY() + 50, rec.getWidth(), rec.getHeight()));
+			x = xStart;
+		}
+
+		return point;
+	}
 
   /**
    * Returns the grid position which is nearest to the specified position.

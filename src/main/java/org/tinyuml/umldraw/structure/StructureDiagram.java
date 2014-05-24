@@ -45,6 +45,8 @@ import org.tinyuml.umldraw.structure.Association.AssociationType;
  * @version 1.0
  */
 public class StructureDiagram extends GeneralDiagram {
+	
+	private static final long serialVersionUID = 1675339510442277676L;
 
   /**
    * Constructor.

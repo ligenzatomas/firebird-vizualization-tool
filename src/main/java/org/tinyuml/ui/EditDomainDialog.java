@@ -1,49 +1,59 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 import org.firebirdvisualizationtool.database.firebird.CharacterSet;
-import org.firebirdvisualizationtool.database.firebird.DatabaseColumnCharacters;
-import org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.ARRAY;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.BIGINT;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.BLOB;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.CHAR;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.DATE;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.DECIMAL;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.DOUBLE_PRECISION;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.FLOAT;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.INTEGER;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.NUMERIC;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.SMALLINT;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.TIME;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.TIMESTAMP;
-import static org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes.VARCHAR;
+import org.firebirdvisualizationtool.database.firebird.DatabaseCharacterSets;
+import org.firebirdvisualizationtool.database.firebird.ColumnTypes;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.ARRAY;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.BIGINT;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.BLOB;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.CHAR;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.DATE;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.DECIMAL;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.DOUBLE_PRECISION;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.FLOAT;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.INTEGER;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.NUMERIC;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.SMALLINT;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.TIME;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.TIMESTAMP;
+import static org.firebirdvisualizationtool.database.firebird.ColumnTypes.VARCHAR;
+import org.firebirdvisualizationtool.database.firebird.DataType;
 import org.tinyuml.model.Domain;
 import org.tinyuml.util.ApplicationResources;
 import org.tinyuml.util.DocumentFilterFactory;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class EditDomainDialog extends javax.swing.JDialog {
 
@@ -70,7 +80,7 @@ public class EditDomainDialog extends javax.swing.JDialog {
 		
 		// pri vytvoreni nove
 		if(domain == null)
-			this.domain = Domain.getPrototype().create("Domain", DatabaseColumnTypes.INTEGER, false);
+			this.domain = Domain.getPrototype().create("Domain", ColumnTypes.INTEGER, false);
 		else {
 			
 			// TODO editace domen
@@ -91,8 +101,8 @@ public class EditDomainDialog extends javax.swing.JDialog {
 	 */
 	private void modelInit() {
 		
-		datatypeDomainComboBox.setModel(Domain.getTableColTypes());
-		charsetDomainComboBox.setModel(DatabaseColumnCharacters.getColumnCharacters());
+		datatypeDomainComboBox.setModel(DataType.getTableColTypes());
+		charsetDomainComboBox.setModel(DatabaseCharacterSets.getColumnCharacters());
 		
 		// neni zadany charset - neni mozne zjistit collate
 		collateDomainComboBox.setModel(new DefaultComboBoxModel());
@@ -123,13 +133,11 @@ public class EditDomainDialog extends javax.swing.JDialog {
 			}
 			
 			if(!domain.getCharacterSet().isEmpty()) {
-				System.out.println("getCharacterSet " + domain.getCharacterSet());
-				charsetDomainComboBox.setSelectedItem(DatabaseColumnCharacters.getCharacterSetByName(domain.getCharacterSet()));
+				charsetDomainComboBox.setSelectedItem(DatabaseCharacterSets.getCharacterSetByName(domain.getCharacterSet()));
 				editCharset = true;
 			}
 			
 			if(domain.getCollate() != null && !domain.getCollate().isEmpty()) {
-				System.out.println("getCollate " + domain.getCollate());
 				collateDomainComboBox.setSelectedItem(domain.getCollate());
 				editCollate = true;
 			}
@@ -149,6 +157,8 @@ public class EditDomainDialog extends javax.swing.JDialog {
 			collateDomainComboBox.setEnabled(false);
 			defaultDomainTextArea.setEnabled(false);
 			checkDomainTextArea.setEnabled(false);
+			
+			notEditable = false;
 		} else {
 			checkEditable();
 		}
@@ -191,7 +201,7 @@ public class EditDomainDialog extends javax.swing.JDialog {
 				
 				if(e.getStateChange() == ItemEvent.SELECTED) {
 					
-					DatabaseColumnTypes colType = (DatabaseColumnTypes) e.getItem();
+					ColumnTypes colType = (ColumnTypes) e.getItem();
 					domain.setColType(colType);
 					
 					checkEditable();
@@ -283,10 +293,12 @@ public class EditDomainDialog extends javax.swing.JDialog {
 					
 					CharacterSet set = (CharacterSet) e.getItem();
 					
-					collateDomainComboBox.setModel(DatabaseColumnCharacters.getColumnCollateBySet(set.getName()));
+					collateDomainComboBox.setModel(DatabaseCharacterSets.getColumnCollateBySet(set.getName()));
 					
 					domain.setCharacterSet(set.getName());
-					domain.setCollate((String) collateDomainComboBox.getModel().getSelectedItem());
+					
+					if(!notEditable)
+						domain.setCollate((String) collateDomainComboBox.getModel().getSelectedItem());
 				} else {
 					
 					collateDomainComboBox.setModel(new DefaultComboBoxModel());
@@ -364,7 +376,7 @@ public class EditDomainDialog extends javax.swing.JDialog {
 	 */
 	private void checkEditable() {
 		
-		DatabaseColumnTypes type = domain.getColType();
+		ColumnTypes type = domain.getColType();
 		
 		switch(type) {
 			
@@ -418,11 +430,6 @@ public class EditDomainDialog extends javax.swing.JDialog {
 	public boolean isOk() { return isOk; }
 	
 	public Domain getDomain() {
-		
-		System.out.println(" domain name:" + domain.getName() + " colType:" + domain.getColType().name() + 
-			" notNull:" + domain.getNn() + " size:" + domain.getSize() + " scale:" + domain.getScale() + 
-			" characterSet:" + domain.getCharacterSet() + " collate:" + domain.getCollate() + 
-			" default:" + domain.getDefaultValue() + " check:" + domain.getCheck());
 		
 		return domain;
 	}
@@ -631,7 +638,7 @@ public class EditDomainDialog extends javax.swing.JDialog {
 		} else {
 			
 			if(JOptionPane.showConfirmDialog(this
-				, "Zadaná doména obsahuje chyby. Chcete ji opravit?"
+				, ApplicationResources.getInstance().getString("database.domain.question")
 				, UIManager.getString("OptionPane.titleText")
 				, JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
 				

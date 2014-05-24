@@ -54,6 +54,7 @@ import org.tinyuml.ui.diagram.EditorStateListener;
 import org.tinyuml.ui.diagram.SelectionListener;
 import org.tinyuml.ui.model.DiagramTreeModel;
 import org.tinyuml.ui.model.TinyUmlProject;
+import org.tinyuml.umldraw.eer.EERDiagram;
 import org.tinyuml.umldraw.shared.GeneralDiagram;
 import org.tinyuml.util.Command;
 
@@ -250,21 +251,29 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
     umlModel.addModelListener(this);
   }
 
-  /**
-   * Restores the state from the specified project.
-   * @param project the project
-   */
-  protected void restoreFromProject(TinyUmlProject project) {
-    undoManager.discardAllEdits();
-    umlModel = project.getModel();
-	databaseModel = project.getDatabaseModel();
-    umlModel.addModelListener(this);
-    treeModel.setModel(umlModel);
-    tabbedPane.removeAll();
-    for (UmlDiagram diagram : project.getOpenDiagrams()) {
-      openExistingStructureEditor((GeneralDiagram) diagram);
-    }
-  }
+	/**
+	 * Restores the state from the specified project.
+	 * @param project the project
+	 */
+	protected void restoreFromProject(TinyUmlProject project) {
+		undoManager.discardAllEdits();
+		umlModel = project.getModel();
+		databaseModel = project.getDatabaseModel();
+		
+		umlModel.addModelListener(this);
+		treeModel.setModel(umlModel);
+		tabbedPane.removeAll();
+		for (UmlDiagram diagram : project.getOpenDiagrams()) {
+
+			if(diagram instanceof EERDiagram) {
+
+				openExistingEEREditor((GeneralDiagram) diagram);
+			} else {
+
+				openExistingStructureEditor((GeneralDiagram) diagram);
+			}
+		}
+	}
 
   /**
    * Prepares and creates a project object for writing.
@@ -407,9 +416,20 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
   }
   
 	protected void openNewEEREditor() {
-		EditorPanel editorPanel = editorFactory.openNewEEREditor(umlModel);
+		EditorPanel editorPanel = editorFactory.openNewEEREditor(umlModel, databaseModel);
 		currentEditor = editorPanel.getDiagramEditor();
 		addDiagramEditorEvents(editorPanel);
+	}
+	
+	protected void openExistingEEREditor(GeneralDiagram diagram) {
+		
+		if(!isAlreadyOpen(diagram)) {
+			
+			EditorPanel editorPanel = editorFactory.openEEREditor(diagram);
+			
+			currentEditor = editorPanel.getDiagramEditor();
+			addDiagramEditorEvents(editorPanel);
+		}
 	}
 
   /**

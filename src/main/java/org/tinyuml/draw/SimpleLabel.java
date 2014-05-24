@@ -28,8 +28,9 @@ import org.tinyuml.draw.DrawingContext.FontType;
  * @version 1.0
  */
 public class SimpleLabel extends AbstractNode implements Label {
+	
+	private static final long serialVersionUID = 4669351434481739166L;
 
-  private static final long serialVersionUID = 45848345687785401L;
   private LabelSource source;
   private FontType fontType = FontType.DEFAULT;
   private boolean valid;

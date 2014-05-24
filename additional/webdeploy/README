@@ -1,0 +1,5 @@
+These are template files for webstart and applet deployment that should be tailored to the environment the application is configured for.
+
+Please note that in order to run properly, all jar files need to be signed using jarsigner. The command should be something like this:
+
+jarsigner -keystore <keystore-file> <jar-file> <alias>

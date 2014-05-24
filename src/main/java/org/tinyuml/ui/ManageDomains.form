@@ -27,7 +27,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="620" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="addDomainButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -98,7 +98,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="addDomainButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="P&#x159;idat dom&#xe9;nu"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="ApplicationResources.getInstance().getString(&quot;database.domain.add&quot;)" type="code"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addDomainButtonActionPerformed"/>
@@ -106,7 +108,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="deleteDomainButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Smazat dom&#xe9;nu"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="ApplicationResources.getInstance().getString(&quot;database.domain.remove&quot;)" type="code"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteDomainButtonActionPerformed"/>
@@ -114,7 +118,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="editDomainButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Editovat dom&#xe9;nu"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="ApplicationResources.getInstance().getString(&quot;database.domain.edit&quot;)" type="code"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editDomainButtonActionPerformed"/>

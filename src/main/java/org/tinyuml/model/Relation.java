@@ -126,4 +126,30 @@ public interface Relation extends UmlModelElement {
    * @param multiplicity the Multiplicity
    */
   void setElement2Multiplicity(Multiplicity multiplicity);
+  
+  boolean isElement1Mandatory();
+  
+  void setElement1Mandatory();
+  
+  void setElement1NonMandatory();
+  
+  boolean isElement2Mandatory();
+  
+  void setElement2Mandatory();
+  
+  void setElement2NonMandatory();
+  
+  boolean isOneOnOne();
+  
+  void setOneOnOne();
+  
+  boolean isOneOnMany();
+  
+  void setOneOnMany();
+  
+  boolean isIdentifying();
+  
+  void setIdentifying();
+  
+  void setNonIdentifying();
 }

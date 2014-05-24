@@ -97,7 +97,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="referencingPanel" max="32767" attributes="0"/>
+                          <Component id="referencingPanel" max="-2" attributes="0"/>
                           <Component id="referencedPanel" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -106,7 +106,7 @@
                       <Component id="oneToOneRadioButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="identifyingCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="196" max="32767" attributes="0"/>
+                      <EmptySpace pref="223" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -130,8 +130,8 @@
                               <Component id="referencingTableName" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="referencingTableForeignKeyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="referencingTableColLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="referencingTableForeignKeyLabel" min="-2" max="-2" attributes="0"/>
+                                      <Component id="referencingTableColLabel" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -160,9 +160,9 @@
                               <Component id="referencingTableColLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="referencingTableCol" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace pref="46" max="32767" attributes="0"/>
                           <Component id="referencingTableMandatoryCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="45" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -188,7 +188,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="referencingTableColLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Col:"/>
+                    <Property name="text" type="java.lang.String" value="Cols:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="referencingTableCol">
@@ -221,7 +221,7 @@
                               <Component id="referencedTableName" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="referencedTableColLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                                   <Component id="referencedTableCol" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="referencedTableMandatoryCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -240,9 +240,9 @@
                               <Component id="referencedTableColLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="referencedTableCol" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                          <Component id="referencedTableMandatoryCheckBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
+                          <Component id="referencedTableMandatoryCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -258,7 +258,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="referencedTableColLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Col:"/>
+                    <Property name="text" type="java.lang.String" value="Cols:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="referencedTableCol">

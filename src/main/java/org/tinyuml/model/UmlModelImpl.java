@@ -34,8 +34,9 @@ import java.util.Set;
  * @version 1.0
  */
 public class UmlModelImpl implements UmlModel {
+	
+	private static final long serialVersionUID = -4050784810311736310L;
 
-  private static final long serialVersionUID = -3440413376365267032L;
   // The list of main elements. Top-level elements go here. A top-level element
   // is an element without a parent namespace (package).
   private Set<UmlModelElement> mainElements = new HashSet<UmlModelElement>();

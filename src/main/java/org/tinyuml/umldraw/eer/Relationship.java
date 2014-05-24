@@ -1,12 +1,25 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.umldraw.eer;
 
-import java.awt.Color;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -19,31 +32,23 @@ import org.tinyuml.draw.RectilinearConnection;
 import org.tinyuml.draw.SimpleLabel;
 import org.tinyuml.model.Relation;
 import org.tinyuml.model.RelationType;
-import org.tinyuml.model.UmlTableCol;
-import org.tinyuml.model.UmlTableForeignKey;
-import org.tinyuml.model.UmlTableIndex;
 import org.tinyuml.umldraw.shared.BaseConnection;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class Relationship extends BaseConnection {
 
 	private static Relationship prototype;
+	private static final long serialVersionUID = 7441677812023019011L;
 	
 	private RelationType relationType;
 	
 	private Label multiplicity1Label;
 	private Label multiplicity2Label;
 	
-	private UmlTableCol foreignKeyCol;
-	private UmlTableForeignKey foreignKey;
-	
-	private UmlTableCol primaryKeyCol;
-	private UmlTableIndex primaryKey;
-	
-	private boolean showMultiplicities;
+	private boolean showMultiplicities = true;
 
 	/**
 	 * Returns the prototype instance.
@@ -63,6 +68,14 @@ public class Relationship extends BaseConnection {
 		
 		setConnection(new RectilinearConnection());
 		setupMultiplicityLabels();
+	}
+
+	public RelationType getRelationType() {
+		return relationType;
+	}
+
+	public void setRelationType(RelationType relationType) {
+		this.relationType = relationType;
 	}
 
 	/**
@@ -145,7 +158,7 @@ public class Relationship extends BaseConnection {
 	 * Returns the model element, which is always an instance of Relation.
 	 * @return the model element
 	 */
-	private Relation getRelation() { return (Relation) getModelElement(); }
+	public Relation getRelation() { return (Relation) getModelElement(); }
 
 	/**
 	 * Returns the RelationType.
@@ -230,7 +243,7 @@ public class Relationship extends BaseConnection {
 				break;
 			case WEST:
 			default:
-				x = endpoint.getX() - label.getSize().getWidth();
+				x = endpoint.getX() - label.getSize().getWidth() - 10;
 				y = endpoint.getY() + 5;
 				break;
 		}

@@ -36,8 +36,8 @@ import java.util.List;
  */
 public abstract class AbstractConnection
 implements Connection, NodeChangeListener {
-
-  private static final long serialVersionUID = -1014584869536016852L;
+	
+	private static final long serialVersionUID = -5958109339344544721L;
   private Node node1, node2;
   protected static final double DELTA = 3.0;
   private CompositeNode parent;

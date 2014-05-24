@@ -34,8 +34,9 @@ import org.tinyuml.model.UmlModel;
  * @version 1.0
  */
 public class TinyUmlProject implements Serializable {
+	
+	private static final long serialVersionUID = 4119458059214144433L;
 
-  private static final long serialVersionUID = -7416279147552646801L;
   private UmlModel model;
   private DatabaseModel databaseModel;
   private List<UmlDiagram> openDiagrams;
@@ -43,6 +44,7 @@ public class TinyUmlProject implements Serializable {
   /**
    * Constructor.
    * @param aModel the UmlModel object
+   * @param aDatabaseModel database model
    */
   public TinyUmlProject(UmlModel aModel, DatabaseModel aDatabaseModel) {
     model = aModel;

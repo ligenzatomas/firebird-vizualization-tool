@@ -1,7 +1,23 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui;
 
 import org.firebirdvisualizationtool.database.firebird.ConnectionProperties;
@@ -9,30 +25,28 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.FileNotFoundException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.PlainDocument;
+import org.firebirdvisualizationtool.database.firebird.CharacterSet;
+import org.firebirdvisualizationtool.database.firebird.DatabaseCharacterSets;
 import org.firebirdvisualizationtool.database.firebird.DatabaseConnection;
-import org.tinyuml.database.DatabaseEncoding;
+import org.tinyuml.util.ApplicationResources;
+import org.tinyuml.util.DocumentFilterFactory;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class ManageConnections extends javax.swing.JDialog {
 
@@ -47,10 +61,12 @@ public class ManageConnections extends javax.swing.JDialog {
 		
 		super(parent, Dialog.ModalityType.APPLICATION_MODAL);
 		
-		for(ConnectionProperties conn : connections) {
-			
-			if(conn.isValid())
-				connectionsListModel.addElement(conn);
+		if(connections != null) {
+			for(ConnectionProperties conn : connections) {
+
+				if(conn.isValid())
+					connectionsListModel.addElement(conn);
+			}
 		}
 		
 		initComponents();
@@ -81,8 +97,10 @@ public class ManageConnections extends javax.swing.JDialog {
 			}
 		});
 		
-		if(!connectionsListModel.isEmpty())
+		if(!connectionsListModel.isEmpty()) {
 			connectionsList.setSelectedIndex(0);
+			lastSelection = 0;
+		}
 		
 		connectionsList.setCellRenderer(new DefaultListCellRenderer() {
 
@@ -99,11 +117,15 @@ public class ManageConnections extends javax.swing.JDialog {
 		nameTextField.getDocument().addDocumentListener(getDocumentListener());
 		hostTextField.getDocument().addDocumentListener(getDocumentListener());
 		fileTextField.getDocument().addDocumentListener(getDocumentListener());
+		
+		((PlainDocument) portTextField.getDocument()).setDocumentFilter(
+			DocumentFilterFactory.buildFilter(DocumentFilterFactory.DocumentFilterType.INT, false));
 		portTextField.getDocument().addDocumentListener(getDocumentListener());
+		
 		userTextField.getDocument().addDocumentListener(getDocumentListener());
 		passwordField.getDocument().addDocumentListener(getDocumentListener());
 		
-		encodingComboBox.setModel(new DefaultComboBoxModel(DatabaseEncoding.values()));
+		encodingComboBox.setModel(DatabaseCharacterSets.getColumnCharacters());
 		encodingComboBox.addItemListener(new ItemListener() {
 
 			@Override
@@ -148,8 +170,6 @@ public class ManageConnections extends javax.swing.JDialog {
 	
 	private void saveConnectionProperty(int row) {
 		
-		System.out.println("saveConnectionProperty - " + row);
-		
 		if(row >= 0
 			&& loading == false) {
 			
@@ -158,27 +178,9 @@ public class ManageConnections extends javax.swing.JDialog {
 			conn.setName(nameTextField.getText());
 			conn.setHost(hostTextField.getText());
 			conn.setFile(fileTextField.getText());
+			conn.setPort(portTextField.getText());
 			
-			String port = portTextField.getText();
-			
-			if(!port.isEmpty()) {
-				try {
-					conn.setPort(port);
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(mainPanel, "Je nutné zadat pouze číselnou hodnotu!");
-					
-					SwingUtilities.invokeLater(new Runnable() {
-
-						@Override
-						public void run() {
-							
-							portTextField.setText("");
-						}
-					});
-				}
-			}
-			
-			conn.setEncoding((DatabaseEncoding) encodingComboBox.getSelectedItem());
+			conn.setEncoding(((CharacterSet) encodingComboBox.getSelectedItem()).getName());
 			
 			conn.setUser(userTextField.getText());
 			conn.setPassword(passwordField.getPassword());
@@ -189,8 +191,6 @@ public class ManageConnections extends javax.swing.JDialog {
 	
 	private void loadConnectionProperty(int row) {
 		
-		System.out.println("loadConnectionProperty - " + row);
-		
 		loading = true;
 		
 		ConnectionProperties conn = connectionsListModel.elementAt(row);
@@ -198,14 +198,21 @@ public class ManageConnections extends javax.swing.JDialog {
 		nameTextField.setText(conn.getName());
 		hostTextField.setText(conn.getHost());
 		fileTextField.setText(conn.getFile());
-		portTextField.setText(String.valueOf(conn.getPort()));
-		encodingComboBox.setSelectedItem(conn.getEncoding());
+		
+		String port = conn.getPort();
+		
+		if(port != null)
+			portTextField.setText(port);
+		else
+			portTextField.setText("3050");
+		
+		encodingComboBox.getModel().setSelectedItem(DatabaseCharacterSets.getCharacterSetByName(conn.getEncoding()));
 		
 		userTextField.setText(conn.getUser());
 		
 		char[] pass = conn.getPassword();
 		
-		if(pass != null && pass.length > 0)
+		if(pass != null)
 			passwordField.setText(new String(pass));
 		
 		passwordField.setEchoChar('*');
@@ -308,7 +315,7 @@ public class ManageConnections extends javax.swing.JDialog {
 
         jLabel7.setText("Encoding");
 
-        encodingComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        encodingComboBox.setModel(DatabaseCharacterSets.getColumnCharacters());
 
         javax.swing.GroupLayout parametersPanelLayout = new javax.swing.GroupLayout(parametersPanel);
         parametersPanel.setLayout(parametersPanelLayout);
@@ -469,7 +476,7 @@ public class ManageConnections extends javax.swing.JDialog {
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
 
-		connectionsListModel.addElement(new ConnectionProperties("connection", "", "", "", "0", DatabaseEncoding.UTF8, new char[] {' '}));
+		connectionsListModel.addElement(new ConnectionProperties("Connection"));
 		
 		int row = connectionsListModel.getSize() - 1;
 		
@@ -505,24 +512,23 @@ public class ManageConnections extends javax.swing.JDialog {
 			
 			if(conn.isValid()) {
 				try {
-					DatabaseConnection.initConnection(conn.getConnectionUrl(), conn);
 					
-					if(DatabaseConnection.isValid()) {
+					if(DatabaseConnection.testConnection(conn.getConnectionUrl(), conn)) {
 						
 						JOptionPane.showMessageDialog(
 							mainPanel
-							, "Úspěšně navázáno spojení s databází (" 
-								+ DatabaseConnection.getConnection().getMetaData().getURL()
+							, ApplicationResources.getInstance().getString("database.connection.working") + " (" 
+								+ conn.getConnectionUrl()
 								+ ")"
-							, "Test spojení s databází"
+							, ApplicationResources.getInstance().getString("database.connection.title")
 							, JOptionPane.INFORMATION_MESSAGE);
 						
 					} else {
 						
 						JOptionPane.showMessageDialog(
 							mainPanel
-							, "Nebylo navázáno spojení s databází (databáze není dostupná)"
-							, "Test spojení s databází"
+							, ApplicationResources.getInstance().getString("database.connection.nonworking")
+							, ApplicationResources.getInstance().getString("database.connection.title")
 							, JOptionPane.INFORMATION_MESSAGE);
 					}
 					
@@ -530,16 +536,16 @@ public class ManageConnections extends javax.swing.JDialog {
 					
 					JOptionPane.showMessageDialog(
 						mainPanel
-						, "Nebylo navázáno spojení s databází (nebyl nalezen správný JDBC ovladač)"
-						, "Test spojení s databází"
+						, ApplicationResources.getInstance().getString("database.connection.driver")
+						, ApplicationResources.getInstance().getString("database.connection.title")
 						, JOptionPane.INFORMATION_MESSAGE);
 					
 				} catch (SQLException ex) {
 					
 					JOptionPane.showMessageDialog(
 						mainPanel
-						, "Nebylo navázáno spojení s databází, nastala SQL chyba (" + ex.getMessage() + ") "
-						, "Test spojení s databází"
+						, ApplicationResources.getInstance().getString("database.connection.sql") + ex.getMessage()
+						, ApplicationResources.getInstance().getString("database.connection.title")
 						, JOptionPane.INFORMATION_MESSAGE);
 				}
 				
@@ -547,8 +553,8 @@ public class ManageConnections extends javax.swing.JDialog {
 				
 				JOptionPane.showMessageDialog(
 					mainPanel
-					, "Nejsou zadány potřebné parametry"
-					, "Test spojení s databází"
+					, ApplicationResources.getInstance().getString("database.connection.params")
+					, ApplicationResources.getInstance().getString("database.connection.title")
 					, JOptionPane.INFORMATION_MESSAGE);
 			}
 		}

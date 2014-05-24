@@ -1,21 +1,39 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui.diagram;
 
 import java.awt.Dialog;
+import javax.swing.text.PlainDocument;
 import org.tinyuml.model.UmlProcedure;
 import org.tinyuml.umldraw.eer.ProcedureElement;
 import org.tinyuml.util.ApplicationResources;
+import org.tinyuml.util.DocumentFilterFactory;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class EditProcedureDialog extends javax.swing.JDialog {
 
-	private ProcedureElement objProcedureElement;
+	private final ProcedureElement objProcedureElement;
 	
 	private boolean isOk;
 	
@@ -39,6 +57,9 @@ public class EditProcedureDialog extends javax.swing.JDialog {
 		
 		procedureName.setText(umlProcedure.getName());
 		sourceProcedure.setText(umlProcedure.getSource());
+		
+		((PlainDocument) procedureName.getDocument()).setDocumentFilter(
+			DocumentFilterFactory.buildFilter(DocumentFilterFactory.DocumentFilterType.DATABASE_COLUMN_NAME_LENGTH, false));
 	}
 	
 	public String getName() {
@@ -78,7 +99,9 @@ public class EditProcedureDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Název");
+        jTabbedPane1.setName(ApplicationResources.getInstance().getString("database.model.procedure"));
+
+        jLabel1.setText(ApplicationResources.getInstance().getString("database.model.name"));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -166,6 +189,8 @@ public class EditProcedureDialog extends javax.swing.JDialog {
                     .addComponent(okButtonProcedure))
                 .addContainerGap())
         );
+
+        jTabbedPane1.getAccessibleContext().setAccessibleName(ApplicationResources.getInstance().getString("database.model.procedure"));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

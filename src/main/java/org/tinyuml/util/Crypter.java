@@ -1,7 +1,23 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.util;
 
 import java.io.BufferedInputStream;
@@ -18,8 +34,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -35,7 +49,7 @@ import javax.xml.bind.DatatypeConverter;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class Crypter {
 	
@@ -69,27 +83,28 @@ public class Crypter {
 				try {
 					cipherOutputStream.close();
 				} catch (IOException ex) {
-					Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+					ex.printStackTrace();
 				}
 			}
 		} catch (NoSuchAlgorithmException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidKeySpecException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (NoSuchPaddingException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidKeyException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidAlgorithmParameterException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (IOException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (IllegalBlockSizeException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		}
 	}
 	
-	public static Object decryptObjectFromFile(String filename) {
+	public static Object decryptObjectFromFile(String filename) throws 
+		IOException, ClassNotFoundException {
 		
 		Object obj = new Object();
 		CipherInputStream cipherInputStream = null;
@@ -108,34 +123,30 @@ public class Crypter {
 
 				SealedObject sealedObject = (SealedObject) inputStream.readObject();
 				obj = sealedObject.getObject( pbeCipher );
-			} catch (IOException ex) {
-				Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
-			} catch (ClassNotFoundException ex) {
-				Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
 			} catch (IllegalBlockSizeException ex) {
-				Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+				ex.printStackTrace();
 			} catch (BadPaddingException ex) {
-				Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+				ex.printStackTrace();
 			} finally {
 			
 				try {
 					cipherInputStream.close();
 				} catch (IOException ex) {
-					Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+					ex.printStackTrace();
 				}
 			}
 		} catch (NoSuchAlgorithmException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidKeySpecException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (NoSuchPaddingException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidKeyException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidAlgorithmParameterException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (FileNotFoundException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		}
 		
 		return obj;
@@ -154,21 +165,21 @@ public class Crypter {
 
 			encryptText = base64Encode(pbeCipher.doFinal(text.getBytes("UTF-8")));
 		} catch (BadPaddingException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (NoSuchAlgorithmException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidKeySpecException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (NoSuchPaddingException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidKeyException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidAlgorithmParameterException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (IllegalBlockSizeException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (UnsupportedEncodingException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		}
 		
 		return encryptText;
@@ -187,23 +198,23 @@ public class Crypter {
 
 			decryptText = new String(pbeCipher.doFinal(base64Decode(text)), "UTF-8");
 		} catch (NoSuchAlgorithmException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidKeySpecException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (NoSuchPaddingException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidKeyException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (InvalidAlgorithmParameterException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (UnsupportedEncodingException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (IllegalBlockSizeException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (BadPaddingException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		} catch (IOException ex) {
-			Logger.getLogger(Crypter.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		}
 		
 		return decryptText;

@@ -1,11 +1,26 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.umldraw.eer;
 
 import java.awt.geom.Dimension2D;
-import javax.swing.JOptionPane;
 import org.tinyuml.draw.AbstractCompositeNode;
 import org.tinyuml.draw.Compartment;
 import org.tinyuml.draw.DoubleDimension;
@@ -13,7 +28,6 @@ import org.tinyuml.draw.DrawingContext;
 import org.tinyuml.draw.Label;
 import org.tinyuml.draw.LabelSource;
 import org.tinyuml.draw.SimpleLabel;
-import org.tinyuml.model.ElementNameChangeListener;
 import org.tinyuml.model.RelationEndType;
 import org.tinyuml.model.RelationType;
 import org.tinyuml.model.UmlModelElement;
@@ -23,17 +37,17 @@ import org.tinyuml.umldraw.shared.UmlNode;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class ViewElement extends AbstractCompositeNode implements 
 	LabelSource, UmlNode, UmlModelElementListener {
+	
+	private static final long serialVersionUID = 2254935877352345066L;
 	
 	private UmlView viewData;
 	private Label mainLabel;
 	
 	private Compartment mainCompartment;
-	
-	private ElementNameChangeListener nameChangeListener;
 
 	private static ViewElement prototype;
 	
@@ -82,11 +96,6 @@ public class ViewElement extends AbstractCompositeNode implements
 		return cloned;
 	}
 	
-	public void addNameChangeListener(ElementNameChangeListener nameChangeListener) {
-		
-		this.nameChangeListener = nameChangeListener;
-	}
-	
 	/**
 	* Returns the main label for testing purposes.
 	* @return the main label
@@ -117,12 +126,15 @@ public class ViewElement extends AbstractCompositeNode implements
 	}
 	
 	public UmlModelElement getModelElement() { return viewData; }
-
-	public String getLabelText() { return getModelElement().getName(); }
+	
+	public String getLabelText() { 
+		
+		return ((UmlView) getModelElement()).getViewModel().getName(); 
+	}
 
 	public void setLabelText(String aText) { 
 		
-		getModelElement().setName(aText);
+		((UmlView) getModelElement()).getViewModel().setName(aText);
 	}
 
 	public void draw(DrawingContext drawingContext) {

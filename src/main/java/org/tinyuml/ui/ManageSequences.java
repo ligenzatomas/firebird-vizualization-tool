@@ -1,19 +1,37 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui;
 
 import java.awt.Dialog;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.TreeMap;
+import java.util.Iterator;
+import java.util.TreeSet;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import org.tinyuml.model.DefaultNamedElementComparator;
 import org.tinyuml.model.Sequence;
 import org.tinyuml.ui.model.SequenceModel;
 import org.tinyuml.util.ApplicationResources;
@@ -21,7 +39,7 @@ import org.tinyuml.util.TableAdjuster;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class ManageSequences extends javax.swing.JDialog {
 
@@ -33,13 +51,15 @@ public class ManageSequences extends javax.swing.JDialog {
 	private SequenceModel sequenceModel = new SequenceModel();
 	private TableAdjuster adjuster = new TableAdjuster();
 	
-	public ManageSequences(java.awt.Window parent, TreeMap<String, Sequence> aSequences) {
+	public ManageSequences(java.awt.Window parent, TreeSet<Sequence> aSequences) {
 		
 		super(parent, Dialog.ModalityType.APPLICATION_MODAL);
 		
-		for(Sequence seq : aSequences.values()) {
+		Iterator<Sequence> iterator = aSequences.iterator();
+		
+		while(iterator.hasNext()) {
 			
-			sequenceModel.addEntry(seq);
+			sequenceModel.addEntry(iterator.next());
 		}
 		
 		initComponents();
@@ -58,7 +78,6 @@ public class ManageSequences extends javax.swing.JDialog {
 			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				
-				System.out.println(" propertyChange ");
 				adjuster.adjustColumns(sequenceTable);
 			}
 		});
@@ -67,8 +86,6 @@ public class ManageSequences extends javax.swing.JDialog {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				
-				System.out.println(" tableChanged ");
 				
 				if (e.getType() == TableModelEvent.UPDATE
 						&& e.getColumn() > 0) {
@@ -91,8 +108,6 @@ public class ManageSequences extends javax.swing.JDialog {
 				
 				int index = sequenceTable.convertRowIndexToModel(sequenceTable.getSelectedRow());
 				
-				System.out.println(" selectChange - index - " + index + " - isAdjusting - " + e.getValueIsAdjusting());
-				
 				if(e.getValueIsAdjusting())
 					return;
 				else if(index < 0)
@@ -103,15 +118,15 @@ public class ManageSequences extends javax.swing.JDialog {
 		});
 	}
 	
-	public TreeMap<String, Sequence> getSequences() {
+	public TreeSet<Sequence> getSequences() {
 		
-		TreeMap<String, Sequence> sequences = new TreeMap<String, Sequence>();
+		TreeSet<Sequence> sequences = new TreeSet<Sequence>(new DefaultNamedElementComparator());
 		
 		for (Sequence seq : sequenceModel.getEntries()) {
 			
 			if(seq.checkValid()) {
 				
-				sequences.put(seq.getName(), seq);
+				sequences.add(seq);
 			}
 		}
 		
@@ -156,14 +171,14 @@ public class ManageSequences extends javax.swing.JDialog {
             }
         });
 
-        addSequenceButton.setText("Přidat generátor");
+        addSequenceButton.setText(ApplicationResources.getInstance().getString("database.sequencer.add"));
         addSequenceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addSequenceButtonActionPerformed(evt);
             }
         });
 
-        removeSequenceButton.setText("Odebrat generátor");
+        removeSequenceButton.setText(ApplicationResources.getInstance().getString("database.sequencer.remove"));
         removeSequenceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeSequenceButtonActionPerformed(evt);
@@ -182,7 +197,7 @@ public class ManageSequences extends javax.swing.JDialog {
                         .addComponent(addSequenceButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(removeSequenceButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
                         .addComponent(okButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cancelButton)))
@@ -218,7 +233,7 @@ public class ManageSequences extends javax.swing.JDialog {
 
     private void addSequenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSequenceButtonActionPerformed
 
-		sequenceModel.addEntry(Sequence.getPrototype().create("Sequence" + sequenceModel.getEntries().size() + 1));
+		sequenceModel.addEntry(Sequence.getPrototype().create("Sequence" + (sequenceModel.getEntries().size() + 1)));
 		
 		int row = sequenceModel.getRowCount() - 1;
 		

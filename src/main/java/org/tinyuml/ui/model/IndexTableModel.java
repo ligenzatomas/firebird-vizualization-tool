@@ -1,30 +1,53 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui.model;
 
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import org.tinyuml.model.UmlTableIndex;
+import org.firebirdvisualizationtool.database.firebird.IndexTypes;
+import org.tinyuml.model.Index;
+import org.tinyuml.util.ApplicationResources;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class IndexTableModel extends AbstractTableModel {
+	
+	private static final long serialVersionUID = 7610967361573899901L;
 
-	private String[] columnNames = {"Název indexu", "Typ"};
+	private final String[] columnNames = {
+		ApplicationResources.getInstance().getString("database.model.index.name")
+		, ApplicationResources.getInstance().getString("database.model.index.type")};
 	
-	private List<UmlTableIndex> entries = new LinkedList<UmlTableIndex>();
+	private final List<Index> entries = new LinkedList<Index>();
 	
+	@Override
 	public String getColumnName(int index) {
 		
 		return columnNames[index];
 	}
 	
-	public void addEntry(UmlTableIndex col) {
+	public void addEntry(Index col) {
 		
 		int size = entries.size();
 		
@@ -32,16 +55,16 @@ public class IndexTableModel extends AbstractTableModel {
 		fireTableRowsInserted(size, size);
 	}
 	
-	public UmlTableIndex getEntry(int index) {
+	public Index getEntry(int index) {
 		
 		if(index < 0 || index >= getRowCount())
-			throw new ArrayIndexOutOfBoundsException("Špatně zadán index pole (" + index + ").");
+			throw new ArrayIndexOutOfBoundsException(ApplicationResources.getInstance().getString("error.bad.index.message"));
 		else
 			return entries.get(index);
 			
 	}
 	
-	public List<UmlTableIndex> getEntries() {
+	public List<Index> getEntries() {
 		
 		return entries;
 	}
@@ -50,8 +73,8 @@ public class IndexTableModel extends AbstractTableModel {
 		
 		if(index < getRowCount()) {
 			
-			UmlTableIndex entryDown = entries.remove(index);
-			UmlTableIndex entryUp = entries.remove(index - 1);
+			Index entryDown = entries.remove(index);
+			Index entryUp = entries.remove(index - 1);
 
 			entries.add(index - 1, entryDown);
 			entries.add(index, entryUp);
@@ -64,7 +87,7 @@ public class IndexTableModel extends AbstractTableModel {
 		
 		if(index < (getRowCount() - 1)) {
 		
-			UmlTableIndex entryDown = entries.remove(index);
+			Index entryDown = entries.remove(index);
 			entries.add(index + 1, entryDown);
 
 			fireTableDataChanged();
@@ -127,7 +150,7 @@ public class IndexTableModel extends AbstractTableModel {
 			break;
 			
 			case 1:
-				entries.get(rowIndex).setiIndexType((UmlTableIndex.indexType) value);
+				entries.get(rowIndex).setiIndexType((IndexTypes) value);
 			break;
 		}
 		

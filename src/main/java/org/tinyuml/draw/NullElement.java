@@ -30,7 +30,7 @@ import java.awt.geom.Rectangle2D;
 public final class NullElement extends AbstractNode
 implements DiagramElement {
 
-  private static final long serialVersionUID = -2561664634429197055L;
+	private static final long serialVersionUID = 3993902630338653018L;
   private static NullElement instance = new NullElement();
 
   /**

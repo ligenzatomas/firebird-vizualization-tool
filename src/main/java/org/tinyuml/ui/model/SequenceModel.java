@@ -1,25 +1,44 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui.model;
 
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.tinyuml.model.Sequence;
+import org.tinyuml.util.ApplicationResources;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class SequenceModel extends AbstractTableModel {
 	
-	private static final long serialVersionUID = 6671735259027235792L;
+	private static final long serialVersionUID = 5284808396704240257L;
 
-	private String[] columnNames = {"Název sekvence", "Inicializační hodnota"};
+	private final String[] columnNames = {
+		ApplicationResources.getInstance().getString("database.model.sequence.name")
+		, ApplicationResources.getInstance().getString("database.model.sequence.value")};
 	
-	private List<Sequence> entries = new LinkedList<Sequence>();
+	private final List<Sequence> entries = new LinkedList<Sequence>();
 	
 	@Override
 	public String getColumnName(int index) {
@@ -44,7 +63,7 @@ public class SequenceModel extends AbstractTableModel {
 		
 		for (Sequence col : entries) {
 			
-			if(col.getName() == name)
+			if(col.getName().equals(name))
 				return true;
 		}
 		

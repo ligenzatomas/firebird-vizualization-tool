@@ -1,24 +1,46 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.ui.model;
 
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import org.firebirdvisualizationtool.database.firebird.DatabaseColumnTypes;
+import org.firebirdvisualizationtool.database.firebird.ColumnTypes;
 import org.tinyuml.model.Domain;
+import org.tinyuml.util.ApplicationResources;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class DomainModel extends AbstractTableModel {
 	
-	private String[] columnNames = {"Název domény", "Datový typ", "Not null"};
+	private static final long serialVersionUID = -2790925726057560399L;
 	
-	private List<Domain> entries = new LinkedList<Domain>();
+	private final String[] columnNames = {
+		ApplicationResources.getInstance().getString("database.model.domain.name")
+		, ApplicationResources.getInstance().getString("database.model.coltable.type")
+		, ApplicationResources.getInstance().getString("database.model.coltable.nn")};
+	
+	private final List<Domain> entries = new LinkedList<Domain>();
 	
 	@Override
 	public String getColumnName(int index) {
@@ -43,7 +65,7 @@ public class DomainModel extends AbstractTableModel {
 		
 		for (Domain col : entries) {
 			
-			if(col.getName() == name)
+			if(col.getName().equals(name))
 				return true;
 		}
 		
@@ -105,7 +127,7 @@ public class DomainModel extends AbstractTableModel {
 			break;
 			
 			case 1:
-				entries.get(rowIndex).setColType((DatabaseColumnTypes) value);
+				entries.get(rowIndex).setColType((ColumnTypes) value);
 			break;
 				
 			case 2:

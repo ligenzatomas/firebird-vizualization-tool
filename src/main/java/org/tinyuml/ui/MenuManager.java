@@ -141,10 +141,15 @@ public class MenuManager implements ActionListener {
 	  menubar.add(databaseMenu);
 	  createMenuItem(databaseMenu, "manageConnections");
 	  
-	  databaseMenu.insertSeparator(1);
+	  databaseMenu.addSeparator();
 	  
 	  createMenuItem(databaseMenu, "manageSequences");
 	  createMenuItem(databaseMenu, "manageDomains");
+	  
+	  databaseMenu.addSeparator();
+	  
+	  createMenuItem(databaseMenu, "forwardEngineer");
+	  createMenuItem(databaseMenu, "reverseEngineer");
   }
 
   /**

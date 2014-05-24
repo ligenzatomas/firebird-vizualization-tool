@@ -81,9 +81,9 @@ public class UmlRelationTest extends MockObjectTestCase {
     assertTrue(relation.isNavigableToElement2());
     
     // multiplicity
-    relation.setElement1Multiplicity(Multiplicity.N);
+    relation.setElement1Multiplicity(Multiplicity.ZERO_TO_N);
     relation.setElement2Multiplicity(Multiplicity.ONE);
-    assertEquals(Multiplicity.N, relation.getElement1Multiplicity());
+    assertEquals(Multiplicity.ZERO_TO_N, relation.getElement1Multiplicity());
     assertEquals(Multiplicity.ONE, relation.getElement2Multiplicity());
     
     // reading direction

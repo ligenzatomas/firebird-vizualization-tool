@@ -32,18 +32,18 @@
               <Component id="okButtonTable" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="cancellButtonTable" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="jTabbedPane1" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="cancellButtonTable" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="okButtonTable" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="jTabbedPane1" min="-2" pref="607" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="okButtonTable" min="-2" max="-2" attributes="0"/>
+                  <Component id="cancellButtonTable" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -82,14 +82,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jPanel1" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="jPanel1" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="tableName" max="32767" attributes="0"/>
+                              <Component id="tableName" pref="487" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -106,7 +103,7 @@
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="16" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -138,13 +135,18 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jScrollPane1" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <Component id="colAddButton" min="-2" pref="119" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="colAddButton" max="32767" attributes="0"/>
+                                      <Component id="colUpButton" max="32767" attributes="0"/>
+                                  </Group>
                                   <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="colDownButton" max="32767" attributes="0"/>
+                                      <Component id="colEditButton" pref="152" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="colRemoveButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="28" max="32767" attributes="0"/>
-                                  <Component id="colUpButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="colDownButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -155,11 +157,15 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="421" max="32767" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="jScrollPane1" min="-2" pref="423" max="-2" attributes="0"/>
+                          <EmptySpace pref="11" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="colAddButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="colEditButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="colRemoveButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="colUpButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="colDownButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -189,7 +195,9 @@
                 </Container>
                 <Component class="javax.swing.JButton" name="colAddButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="P&#x159;idat sloupec"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.column.add&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colAddButtonActionPerformed"/>
@@ -197,7 +205,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="colRemoveButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Odebrat sloupec"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.column.remove&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colRemoveButtonActionPerformed"/>
@@ -205,7 +215,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="colUpButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Posunout v&#xfd;&#x161;e"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.column.up&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colUpButtonActionPerformed"/>
@@ -213,10 +225,22 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="colDownButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Posunout n&#xed;&#x17e;e"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.column.down&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colDownButtonActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="colEditButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.column.edit&quot;)" type="code"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colEditButtonActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -226,8 +250,10 @@
         <Container class="javax.swing.JPanel" name="indexPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Indexy">
-                <Property name="tabTitle" type="java.lang.String" value="Indexy"/>
+              <JTabbedPaneConstraints tabName="&lt;User Code&gt;">
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="ApplicationResources.getInstance().getString(&quot;database.indexes&quot;)" type="code"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -269,7 +295,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jScrollPane3" alignment="1" max="32767" attributes="0"/>
-                              <Component id="jScrollPane2" alignment="1" pref="482" max="32767" attributes="0"/>
+                              <Component id="jScrollPane2" alignment="1" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="indexAddButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -332,7 +358,9 @@
                 </Container>
                 <Component class="javax.swing.JButton" name="indexAddButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="P&#x159;idat index"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.index.add&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indexAddButtonActionPerformed"/>
@@ -340,7 +368,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="indexRemoveButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Odebrat index"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.index.remove&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indexRemoveButtonActionPerformed"/>
@@ -348,7 +378,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="indexDownButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Posunout n&#xed;&#x17e;e"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.index.down&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indexDownButtonActionPerformed"/>
@@ -356,7 +388,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="indexUpButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Posunout v&#xfd;&#x161;e"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.index.up&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indexUpButtonActionPerformed"/>
@@ -369,8 +403,10 @@
         <Container class="javax.swing.JPanel" name="foreignPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Ciz&#xed; kl&#xed;&#x10d;e">
-                <Property name="tabTitle" type="java.lang.String" value="Ciz&#xed; kl&#xed;&#x10d;e"/>
+              <JTabbedPaneConstraints tabName="&lt;User Code&gt;">
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="ApplicationResources.getInstance().getString(&quot;database.foreignkeys&quot;)" type="code"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -416,7 +452,7 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jScrollPane6" pref="0" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="jScrollPane4" alignment="0" pref="482" max="32767" attributes="0"/>
+                              <Component id="jScrollPane4" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="fkAddButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -438,7 +474,7 @@
                           <Component id="jScrollPane4" min="-2" pref="251" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane5" pref="211" max="32767" attributes="0"/>
+                              <Component id="jScrollPane5" pref="236" max="32767" attributes="0"/>
                               <Component id="jScrollPane6" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -469,7 +505,12 @@
                 </Container>
                 <Component class="javax.swing.JButton" name="fkAddButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="P&#x159;idat index"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.foreignkey.add&quot;)" type="code"/>
+                    </Property>
+                    <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.foreignkey.add&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fkAddButtonActionPerformed"/>
@@ -477,7 +518,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="fkRemoveButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Odebrat index"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.foreignkey.remove&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fkRemoveButtonActionPerformed"/>
@@ -485,7 +528,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="fkUpButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Posunout v&#xfd;&#x161;e"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.foreignkey.up&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fkUpButtonActionPerformed"/>
@@ -493,7 +538,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="fkDownButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Posunout n&#xed;&#x17e;e"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.foreignkey.down&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fkDownButtonActionPerformed"/>
@@ -532,8 +579,10 @@
         <Container class="javax.swing.JPanel" name="triggerPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Triggery">
-                <Property name="tabTitle" type="java.lang.String" value="Triggery"/>
+              <JTabbedPaneConstraints tabName="&lt;User Code&gt;">
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="ApplicationResources.getInstance().getString(&quot;database.triggers&quot;)" type="code"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -574,7 +623,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane7" pref="482" max="32767" attributes="0"/>
+                              <Component id="jScrollPane7" max="32767" attributes="0"/>
                               <Component id="jScrollPane8" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="triggerAddButton" min="-2" max="-2" attributes="0"/>
@@ -611,7 +660,7 @@
                               <Component id="triggerUpdateCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="triggerDeleteCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="19" max="32767" attributes="0"/>
+                          <EmptySpace pref="49" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="triggerAddButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="triggerRemoveButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -654,7 +703,9 @@
                 </Container>
                 <Component class="javax.swing.JButton" name="triggerAddButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="P&#x159;idat index"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.trigger.add&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="triggerAddButtonActionPerformed"/>
@@ -662,7 +713,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="triggerRemoveButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Odebrat index"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.trigger.remove&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="triggerRemoveButtonActionPerformed"/>
@@ -670,7 +723,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="triggerDownButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Posunout n&#xed;&#x17e;e"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.trigger.down&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="triggerDownButtonActionPerformed"/>
@@ -678,7 +733,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="triggerUpButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Posunout v&#xfd;&#x161;e"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="ApplicationResources.getInstance().getString(&quot;database.trigger.up&quot;)" type="code"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="triggerUpButtonActionPerformed"/>

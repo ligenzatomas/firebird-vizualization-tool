@@ -1,9 +1,26 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright 2014 Tomáš Ligenza
+ *
+ * This file is part of Firebird Visualization Tool.
+ *
+ * Firebird Visualization Tool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TinyUML is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firebird Visualization Tool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.tinyuml.umldraw.eer;
 
+import java.awt.geom.Dimension2D;
 import org.tinyuml.draw.AbstractCompositeNode;
 import org.tinyuml.draw.Compartment;
 import org.tinyuml.draw.DoubleDimension;
@@ -11,28 +28,25 @@ import org.tinyuml.draw.DrawingContext;
 import org.tinyuml.draw.Label;
 import org.tinyuml.draw.LabelSource;
 import org.tinyuml.draw.SimpleLabel;
+import org.tinyuml.model.Column;
 import org.tinyuml.model.RelationEndType;
 import org.tinyuml.model.RelationType;
 import org.tinyuml.model.UmlModelElement;
 import org.tinyuml.model.UmlModelElementListener;
 import org.tinyuml.model.UmlTable;
+import org.tinyuml.model.ForeignKey;
+import org.tinyuml.model.Index;
 import org.tinyuml.umldraw.shared.UmlModelElementLabelSource;
 import org.tinyuml.umldraw.shared.UmlNode;
-import java.awt.geom.Dimension2D;
-import javax.swing.JOptionPane;
-import org.tinyuml.model.ElementNameChangeListener;
-import org.tinyuml.model.UmlTableCol;
-import org.tinyuml.model.UmlTableForeignKey;
-import org.tinyuml.model.UmlTableIndex;
 
 /**
  *
- * @author cml
+ * @author Tomáš Ligenza
  */
 public class TableElement extends AbstractCompositeNode implements 
 	LabelSource, UmlNode, UmlModelElementListener {
 	
-	private static final long serialVersionUID = 8583471299020666928L;
+	private static final long serialVersionUID = 472248231592593945L;
 	
 	private UmlTable tableData;
 	private Label mainLabel;
@@ -44,8 +58,6 @@ public class TableElement extends AbstractCompositeNode implements
 	
 	private boolean showCols = true, showIndexes = true
 		, showForeignKeys = true;
-	
-	private ElementNameChangeListener nameChangeListener;
 
 	private static TableElement prototype;
 	
@@ -111,11 +123,6 @@ public class TableElement extends AbstractCompositeNode implements
 		cloned.foreignKeysCompartment.setParent(cloned);
 		
 		return cloned;
-	}
-	
-	public void addNameChangeListener(ElementNameChangeListener nameChangeListener) {
-		
-		this.nameChangeListener = nameChangeListener;
 	}
 	
 	/**
@@ -212,17 +219,14 @@ public class TableElement extends AbstractCompositeNode implements
 	
 	public boolean showForeignKeys() { return showForeignKeys; }
 
-	public String getLabelText() { return getModelElement().getName(); }
+	public String getLabelText() { 
+		
+		return ((UmlTable) getModelElement()).getTableModel().getName(); 
+	}
 
 	public void setLabelText(String aText) { 
 		
-		if(nameChangeListener != null
-			&& nameChangeListener.nameChanged(getModelElement().getName(), aText)) {
-			
-			getModelElement().setName(aText);
-		} else {
-			JOptionPane.showMessageDialog(null, "Zadané jméno tabulky již existuje");
-		}
+		((UmlTable) getModelElement()).getTableModel().setName(aText);
 	}
 
 	public void draw(DrawingContext drawingContext) {
@@ -282,16 +286,16 @@ public class TableElement extends AbstractCompositeNode implements
 			
 			UmlModelElement element = with.getModelElement();
 		
-			if(element instanceof UmlTable) {
+			if(element instanceof UmlTable
+				&& tableData.isPrimaryKey()) {
 
-				//UmlTable table = (UmlTable) element;
-				
-				if(tableData.isPrimaryKey()) {
-					
-					
+				if(associationType.equals(RelationType.N_N_IDE)) {
+
+					if(((UmlTable) element).isPrimaryKey())
+						return true;
+				} else
 					
 					return true;
-				}
 			}
 			
 			return false;
@@ -304,21 +308,21 @@ public class TableElement extends AbstractCompositeNode implements
 	public void elementChanged(UmlModelElement element) {
 		
 		colsCompartment.removeAllLabels();
-		for (UmlTableCol tableCol : ((UmlTable) element).getCols()) {
+		for (Column tableCol : ((UmlTable) element).getCols()) {
 			Label label = new SimpleLabel();
 			label.setSource(new UmlModelElementLabelSource(tableCol));
 			colsCompartment.addLabel(label);
 		}
 		
 		indexesCompartment.removeAllLabels();
-		for (UmlTableIndex property : ((UmlTable) element).getIndexes()) {
+		for (Index property : ((UmlTable) element).getIndexes()) {
 			Label label = new SimpleLabel();
 			label.setSource(new UmlModelElementLabelSource(property));
 			indexesCompartment.addLabel(label);
 		}
 		
 		foreignKeysCompartment.removeAllLabels();
-		for (UmlTableForeignKey property : ((UmlTable) element).getForeignKeys()) {
+		for (ForeignKey property : ((UmlTable) element).getForeignKeys()) {
 			Label label = new SimpleLabel();
 			label.setSource(new UmlModelElementLabelSource(property));
 			foreignKeysCompartment.addLabel(label);

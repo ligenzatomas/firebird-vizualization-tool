@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CharacterSets>
+	
+	<CharacterSet>
+		<name>NONE</name>  
+		<collations>  
+			<collation>NONE</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>OCTETS/BINARY</name>  
+		<collations>  
+			<collation>OCTETS</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ASCII</name>  
+		<collations>  
+			<collation>ASCII</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>UTF8</name>  
+		<collations>  
+			<collation>UTF8</collation>
+			<collation>UNICODE</collation>
+			<collation>UCS_BASIC</collation>
+			<collation>UNICODE_CI_AI</collation>
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_1</name>  
+		<collations>  
+			<collation>ISO8859_1</collation>  
+			<collation>DA_DA</collation>  
+			<collation>DE_DE</collation>  
+			<collation>DU_NL</collation>  
+			<collation>EN_UK</collation>  
+			<collation>EN_US</collation>  
+			<collation>ES_ES</collation>  
+			<collation>ES_ES_CI_AI</collation>  
+			<collation>FI_FI</collation>  
+			<collation>FR_CA</collation>  
+			<collation>FR_FR</collation>  
+			<collation>FR_FR_CI_AI</collation>  
+			<collation>IS_IS</collation>  
+			<collation>IT_IT</collation>  
+			<collation>NO_NO</collation>  
+			<collation>PT_PT</collation>  
+			<collation>PT_BR</collation>  
+			<collation>SV_SV</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_2</name>  
+		<collations>  
+			<collation>ISO8859_2</collation>  
+			<collation>CS_CZ</collation>  
+			<collation>ISO_HUN</collation>  
+			<collation>ISO_PLK</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_3</name>  
+		<collations>  
+			<collation>ISO8859_3</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_4</name>  
+		<collations>  
+			<collation>ISO8859_4</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_5</name>  
+		<collations>  
+			<collation>ISO8859_5</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_6</name>  
+		<collations>  
+			<collation>ISO8859_6</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_7</name>  
+		<collations>  
+			<collation>ISO8859_7</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_8</name>  
+		<collations>  
+			<collation>ISO8859_8</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_9</name>  
+		<collations>  
+			<collation>ISO8859_9</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>ISO8859_13</name>  
+		<collations>  
+			<collation>ISO8859_13</collation>  
+			<collation>LT_LT</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>WIN1250</name>  
+		<collations>  
+			<collation>WIN1250</collation>  
+			<collation>BS_BA</collation>  
+			<collation>WIN_CZ</collation>  
+			<collation>WIN_CZ_CI_AI</collation>  
+			<collation>PXW_CSY</collation>  
+			<collation>PXW_HUN</collation>  
+			<collation>PXW_HUNDC</collation>  
+			<collation>PXW_PLK</collation>  
+			<collation>PXW_SLOV</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>WIN1251</name>  
+		<collations>  
+			<collation>WIN1251</collation>  
+			<collation>WIN1251_UA</collation>  
+			<collation>PXW_CYRL</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>WIN1252</name>  
+		<collations>  
+			<collation>WIN1252</collation>  
+			<collation>WIN_PTBR</collation>  
+			<collation>PXW_INTL</collation>  
+			<collation>PXW_INTL850</collation>  
+			<collation>PXW_NORDAN4</collation>  
+			<collation>PXW_SPAN</collation>  
+			<collation>PXW_SWEDFIN</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>WIN1253</name>  
+		<collations>  
+			<collation>WIN1253</collation>  
+			<collation>PXW_GREEK</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>WIN1254</name>  
+		<collations>  
+			<collation>WIN1254</collation>  
+			<collation>PXW_TURK</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>WIN1255</name>  
+		<collations>  
+			<collation>WIN1255</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>WIN1256</name>  
+		<collations>  
+			<collation>WIN1256</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>WIN1257</name>  
+		<collations>  
+			<collation>WIN1257</collation>  
+			<collation>WIN1257_LV</collation>  
+			<collation>WIN1257_LT</collation>  
+			<collation>WIN1257_EE</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>WIN1258</name>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS437</name>  
+		<collations>  
+			<collation>DOS437</collation>  
+			<collation>DB_DEU437</collation>  
+			<collation>DB_ESP437</collation>  
+			<collation>DB_FIN437</collation> 
+			<collation>DB_FRA437</collation>  
+			<collation>DB_ITA437</collation> 
+			<collation>DB_NLD437</collation>  
+			<collation>DB_SVE437</collation> 
+			<collation>DB_UK437</collation>  
+			<collation>DB_US437</collation> 
+			<collation>PDOX_ASCII</collation>  
+			<collation>PDOX_INTL</collation> 
+			<collation>PDOX_SWEDFIN</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS737</name>  
+		<collations>  
+			<collation>DOS737</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS775</name>  
+		<collations>  
+			<collation>DOS775</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS850</name>  
+		<collations>  
+			<collation>DOS850</collation>  
+			<collation>DB_DEU850</collation>  
+			<collation>DB_ESP850</collation>  
+			<collation>DB_FRA850</collation> 
+			<collation>DB_FRC850</collation>  
+			<collation>DB_ITA850</collation> 
+			<collation>DB_NLD850</collation>  
+			<collation>DB_PTB850</collation> 
+			<collation>DB_SVE850</collation>  
+			<collation>DB_UK850</collation> 
+			<collation>DB_US850</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS852</name>  
+		<collations>  
+			<collation>DOS852</collation>  
+			<collation>DB_CSY</collation>  
+			<collation>DB_PLK</collation>  
+			<collation>DB_SLO</collation> 
+			<collation>PDOX_CSY</collation>  
+			<collation>PDOX_HUN</collation> 
+			<collation>PDOX_PLK</collation>  
+			<collation>PDOX_SLO</collation> 
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS857</name>  
+		<collations>  
+			<collation>DOS857</collation>  
+			<collation>DB_TRK</collation>  
+		</collations>  
+	</CharacterSet>
+
+	<CharacterSet>
+		<name>DOS858</name>  
+		<collations>  
+			<collation>DOS858</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS860</name>  
+		<collations>  
+			<collation>DOS860</collation>  
+			<collation>DB_PTG860</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS861</name>  
+		<collations>  
+			<collation>DOS861</collation>  
+			<collation>PDOX_ISL</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS862</name>  
+		<collations>  
+			<collation>DOS862</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS863</name>  
+		<collations>  
+			<collation>DOS863</collation>  
+			<collation>DB_FRC863</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS864</name>  
+		<collations>  
+			<collation>DOS864</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS865</name>  
+		<collations>  
+			<collation>DOS865</collation>  
+			<collation>DB_NOR865</collation>  
+			<collation>DB_DAN865</collation>  
+			<collation>PDOX_NORDAN4</collation> 
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS866</name>  
+		<collations>  
+			<collation>DOS866</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>DOS869</name>  
+		<collations>  
+			<collation>DOS869</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>BIG_5</name>  
+		<collations>  
+			<collation>UCS_BASIC</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>KOI8R</name>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>KOI8U</name>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>CYRL</name>  
+		<collations>  
+			<collation>CYRL</collation>  
+			<collation>DB_RUS</collation>  
+			<collation>PDOX_CYRL</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>KSC_5601</name>  
+		<collations>  
+			<collation>KSC_5601</collation>  
+			<collation>KSC_DICTIONARY</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>NEXT</name>  
+		<collations>  
+			<collation>NEXT</collation>  
+			<collation>NXT_DEU</collation> 
+			<collation>NXT_ESP</collation>  
+			<collation>NXT_FRA</collation>
+			<collation>NXT_ITA</collation>  
+			<collation>NXT_US</collation> 
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>SJIS_0208</name>  
+		<collations>  
+			<collation>SJIS_0208</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>EUCJ_0208</name>  
+		<collations>  
+			<collation>EUCJ_0208</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>GB_2312</name>  
+		<collations>  
+			<collation>GB_2312</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>CP943C</name>  
+		<collations>  
+			<collation>CP943C_UNICODE</collation>  
+		</collations>  
+	</CharacterSet>
+	
+	<CharacterSet>
+		<name>TIS620</name>  
+		<collations>  
+			<collation>TIS620_UNICODE</collation>  
+		</collations>  
+	</CharacterSet>
+	
+</CharacterSets>
